@@ -1,0 +1,22 @@
+# MATLAB temp & backups
+*.asv
+*.m~
+*~
+
+# Large/binary MATLAB files you shouldn’t track
+*.mat
+*.fig
+*.mex*
+
+# Folders we don’t want in git
+figures/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Mathematica (optional)
+*.mx
+*.mt
+*.old
+*.bak
