@@ -37,25 +37,21 @@ fD=wD/(2*pi); % frequency on bif. line
 JbarD=double(Y.JbarD); % Jbar on bif. line
 phi=acos((Jee-Jii)/(2*(JbarD^2-Jee*Jii)^0.5)); % phi
 psi=acos(Jhat/JbarD); % psi
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% The frequency contour part %%%%
-
 Jei_arr=0:0.01:(1+Jii); % array of Jei
 Jie_arr=0:0.02:20; % array of Jie
 f=nan(length(Jei_arr),length(Jie_arr)); % create nan array of frequencies to a grid of Jei-Jie
-parfor i=1:length(Jei_arr) % compute parallely the frequencies on the Jei-Jie grid
+parfor i=1:length(Jei_arr) 
     Jei=Jei_arr(i);
     f(i,:)=FrequencyContourJeiJie(JbarD,Jee,Jei,Jie_arr,Jii,dt,tf); 
 end
 f=f/(Tunits); % frequency in the Jei-Jie phase diagram, units in Hz
 [JEI_arr,JIE_arr]=meshgrid(Jei_arr,Jie_arr);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%% Plot the figure %%%%%%%%%%%%%%
-
-[C,h]=contourf(JEI_arr,JIE_arr,f',100); % print 
+[C,h]=contourf(JEI_arr,JIE_arr,f',100);
 set(h,'LineColor','none')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 grid on
 hold on
 Jei_init=0;

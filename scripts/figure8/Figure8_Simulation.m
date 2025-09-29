@@ -28,7 +28,7 @@ N_e=1; % It is the same for analysing the order parameters in small fluctuations
 N_i=1;
 
 alpha=0.98; % relative depression %%
-muie=0.01;% measure of linearity
+muie=0.01; % measure of linearity
 muee=0.02;
 Jiemax=20; % J_ie_max
 Jeemax=1;
