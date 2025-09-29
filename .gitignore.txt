@@ -4,6 +4,7 @@
 *~
 
 # Large/binary MATLAB files you shouldn’t track
+figures/
 *.mat
 *.fig
 *.mex*

@@ -165,14 +165,14 @@ vu=[ones(1,2*N_e*N_i) ; ones(1,N_e*N_i) -ones(1,N_e*N_i)]'/(2*N_e*N_i)^0.5;
 
 parfor trail=1:numtrails
     [Vnvol,Vevol,Vavol,Vdvol,stdmebar,stdmibar,stdmetil,stdmitil,Jeimeandyn,Jiemeandyn,dJ_arr_t] = FullSynDynMultiTrails(m_e_history,m_i_history,Jei,Jie,Jee,Jii,t,Jiemax,mu,alpha,JbarD,Jeemean,Jiimean,vn,ve,vu,vaei,vaie,vdei,vdie,mulvn,mulve,mulva,mulvd,dtlearn,lambda_e,lambda_i,K_Ibar,K_Itilmphi,K_Itilphi,K_Eptilpsi,K_Etilphi,K_Etilmphi,K_pI,K_pE,K_mI,K_mE,N_e,N_i,dt,tf)
-    parsave(sprintf('Figure5_simulationsdataNEW%d.mat',trail),Vnvol,Vevol,Vavol,Vdvol,stdmebar,stdmibar,stdmetil,stdmitil,Jeimeandyn,Jiemeandyn,dJ_arr_t);
+    parsave(sprintf('Figure6_simulationsdataNEW%d.mat',trail),Vnvol,Vevol,Vavol,Vdvol,stdmebar,stdmibar,stdmetil,stdmitil,Jeimeandyn,Jiemeandyn,dJ_arr_t);
 end
 toc
 %%%% BELOW is the name of the previous working simulation!!!!!! %%%%
 %%%%!!!! Figure5_simulationsdataNEW !!!!%%%%
 
 %% The graphs of the previous sections for 100 trails
-base_filename='Figure5_simulationsdataNEW';
+base_filename='Figure6_simulationsdataNEW';
 numtrails=100;
 Vnvol_alltrails=[];
 Vevol_alltrails=[];

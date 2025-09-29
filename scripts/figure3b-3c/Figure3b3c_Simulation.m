@@ -251,7 +251,7 @@ K_pI=1/tau_pI*exp(-Delta_extended*H_I/tau_pI).*heaviside(H_I*Delta_extended);
 K_mI=1/tau_mI*exp(Delta_extended*H_I/tau_mI).*heaviside(-H_I*Delta_extended);
 
 
-t=1:500;
+t=1:1200;
 %check_arr=[reshape(check_ei.',1,[]) reshape(check_ie.',1,[])];
 J_ei_dot=zeros(N_e,N_i);
 J_ie_dot=zeros(N_i,N_e);
@@ -361,21 +361,26 @@ for i=2:length(t)
 end
 %% Plot the network activity of last rounds in Critical Rhythmogenesis %%
 figure;
-plot(dt*(1:1:length(m_e_full))*Tunits,m_e_full,'Color',	[0.90, 0.40, 0.35]) % in units of s
+tp0=round(length(m_e_full)*9/10)-1000000;
+tpf=length(m_e_full)-3000000;
+
+
+plot(dt*(tp0:1:tpf)*Tunits,m_e_full(tp0:1:tpf),'Color',	[0.90, 0.40, 0.35]) % in units of s
 hold on
-plot(dt*(1:1:length(m_i_full))*Tunits,m_i_full,'Color',	[0.30, 0.60, 0.90]) % in units of s
+plot(dt*(tp0:1:tpf)*Tunits,m_i_full(tp0:1:tpf),'Color',	[0.30, 0.60, 0.90]) % in units of s
 xlabel('$\mathrm{Time} \ [s]$','interpreter','latex','FontSize',18)
 ylabel('$m_X(t)$','interpreter','latex','FontSize',18)
 set(gca,'FontSize',14)
 set(gca,'TickLabelInterpreter','latex')
 grid on
 
-for i=1:50
+for i=150:175%1:50
 plot(ones(1,10)*Transtime(end-i)*Tunits,linspace(0,max(m_i_full(:)),10),'--','Color','Black')
 hold on
 end
 
-xlim(Tunits*[Transtime(end-10)-1 Transtime(end-4)+1])
+%xlim(Tunits*[Transtime(end-10)-1 Transtime(end-4)+1])
+xlim([1033 1039])
 ylim([0 2.5])
 lgd=legend({'$\mathrm{E}$','$\mathrm{I}$'},'Interpreter','latex','Location','NorthEast');
 legendJiiTitle=sprintf('$X$','Interpreter','latex');
