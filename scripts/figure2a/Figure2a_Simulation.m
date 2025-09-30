@@ -54,7 +54,7 @@ f=f/(Tunits); % frequency in the Jei-Jie phase diagram, units in Hz
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%% Plot the figure %%%%%%%%%%%%%%
 
-[C,h]=contourf(JEI_arr,JIE_arr,f',100); % print 
+[C,h]=contourf(JEI_arr,JIE_arr,f',100); % print  the contour
 set(h,'LineColor','none')
 grid on
 hold on
@@ -62,9 +62,9 @@ Jei_init=0;
 dJei=0.01;
 Jei_final=1+Jii;
 Jei_arr=Jei_init:dJei:Jei_final;
-plot(Jei_arr,JbarD^2./Jei_arr,'Color','Black','LineWidth',3.5)
+plot(Jei_arr,JbarD^2./Jei_arr,'Color','Black','LineWidth',3.5) % plot the bif. line
 hold on
-plot((1+Jii)*ones(1,length(0:20)),0:20,'Color','Black','LineWidth',3.5)
+plot((1+Jii)*ones(1,length(0:20)),0:20,'Color','Black','LineWidth',3.5) % plot the line between FP and OI
 xlim([0 2])
 ylim([0 20]) 
 text(0.3,4,'$\mathrm{FP}$','interpreter','latex','FontSize',26)

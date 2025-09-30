@@ -62,14 +62,14 @@ if (size(m_e_history,2)==1) && length(size(m_i_history,2))==1  % checks if the h
         m_e_history=m_e_history';
         m_i_history=m_i_history';
     end
-m_e(:,1)=m_e_history + (dt/tau)*(-m_e_history+Th_li_full(I_0 + (J_ee*m_e_history')'/N_e - (J_ei*m_i_history')'/N_i)); % first step
-m_i(:,1)=m_i_history + (dt/tau)*(-m_i_history+Th_li_full(I_0 + (J_ie*m_e_history')'/N_e - (J_ii*m_i_history')'/N_i)); % first step
-I_before_D_e=Th_li_full(I_0 + (J_ee*m_e_history')/N_e - (J_ei*m_i_history')/N_i); % input to m_e when -D<t<0
-I_before_D_i=Th_li_full(I_0 + (J_ie*m_e_history')/N_e - (J_ii*m_i_history')/N_i); % input to m_i when -D<t<0
+m_e(:,1)=m_e_history + (dt/tau)*(-m_e_history+Th_li_full(I_0 + (J_ee*m_e_history')'/N_e - (J_ei*m_i_history')'/N_i));
+m_i(:,1)=m_i_history + (dt/tau)*(-m_i_history+Th_li_full(I_0 + (J_ie*m_e_history')'/N_e - (J_ii*m_i_history')'/N_i));
+I_before_D_e=Th_li_full(I_0 + (J_ee*m_e_history')/N_e - (J_ei*m_i_history')/N_i);
+I_before_D_i=Th_li_full(I_0 + (J_ie*m_e_history')/N_e - (J_ii*m_i_history')/N_i);
 
 i=1;
 
-for t=(t0+dt):dt:tf % The dynamics loop
+for t=(t0+dt):dt:tf
 
     if t<D
         
@@ -124,10 +124,87 @@ end
 
 end
 
-[T_mean_m_e,T_std_m_e]=proj.common.Period_Peaks_full(m_e,dt);  % compute the time period of m_e
-[T_mean_m_i,T_std_m_i]=proj.common.Period_Peaks_full(m_i,dt);  % compute the time period of m_i 
+[T_mean_m_e,T_std_m_e]=proj.common.Period_Peaks_full(m_e,dt); 
+[T_mean_m_i,T_std_m_i]=proj.common.Period_Peaks_full(m_i,dt); 
 
-m_e(m_e(:,:,end)<10^-7)=0; % Don't work with small numbers
-m_i(m_i(:,:,end)<10^-7)=0; % Don't work with small numbers
+%m_e_steady=I_0*(1-J_ei)/(1+J_ei*J_ie);
+%m_i_steady=I_0*(1+J_ie)/(1+J_ei*J_ie);
 
+m_e(m_e(:,:,end)<10^-7)=0;
+m_i(m_i(:,:,end)<10^-7)=0;
+
+%T1=Period_current(dt,I_0,J_0,m_i.');
+
+
+
+%%% The condition for input of m_i above
+%figure;
+%for k=1:size(m_e,1)
+%plot(time,m_e(k,:))
+%hold on
+%end
+%title('m_E','FontSize',20)
+
+%figure;
+
+%for k=1:size(m_i,1)
+%plot(time,m_i(k,:))
+%hold on
+%end
+%title('m_I','FontSize',20)
+
+
+%x0=0;
+%y0=0;
+%width=18;
+%height=40;
+
+%figure;
+%subplot(2,1,1); %% of m_e
+%plot(time*5,m_e,'LineWidth',2);
+%hold on
+%plot(J_i_arr,J_bar_D^2./J_i_arr,'color','black','Linewidth',6); % the limit between oscillatory phase to lower than
+%title('J_e nullcline','FontSize',30);
+%xlabel('$t $','fontsize',30,'interpreter','latex')
+%ylabel('$m_E$','fontsize',30,'interpreter','latex')
+%axis([1000 3000 0 0.07])
+
+%set(gca,'FontSize',20)
+%set(gcf,'Units','Centimeters','position',[x0,y0,width,height])
+%set(gca,'xtick',[])
+
+
+
+
+%1/T_mean_m_e*100
+%subplot(2,1,2);
+%plot(time*5,m_i,'LineWidth',2);
+%w=2*pi/T_mean_m_e;
+%f=w/(2*pi); %in KHz
+%hold on
+%plot(J_i_arr,J_bar_D^2./J_i_arr,'color','black','Linewidth',6); % the limit between oscillatory phase to lower than
+%title('J_e nullcline','FontSize',30);
+%xlabel('$t \ [\textrm{msec}]$','fontsize',30,'interpreter','latex')
+%ylabel('$m_I$','fontsize',30,'interpreter','latex')
+%axis([~ ~ 1 1.6])
+
+%set(gca,'FontSize',20)
+%set(gcf,'Units','Centimeters','position',[x0,y0,width,height])
+
+% figure;
+% plot(5*time,m_e,'LineWidth',3)
+% hold on
+% plot(5*time,m_i,'LineWidth',3)
+% xlabel('$t \ [\mathrm{ms}]$','interpreter','latex','FontSize',18)
+% ylabel('$m_X(t)$','interpreter','latex','FontSize',18)
+% lgd=legend({'$\mathrm{E}$','$\mathrm{I}$'},'Interpreter','latex','Location','NorthEast');
+% legendJiiTitle=sprintf('$X$','Interpreter','latex');
+% lgd.Title.String = legendJiiTitle;
+% set(gca,'FontSize',14)
+% set(gca,'TickLabelInterpreter','latex')
+% grid on
+
+%plot(Inpm_e)
+%hold on
+%plot(Inpm_i)
 end
