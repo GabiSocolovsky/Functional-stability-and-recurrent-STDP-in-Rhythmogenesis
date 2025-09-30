@@ -1,4 +1,4 @@
-%% Figure2a_Simulation %%
+%% Figure2a Simulation %%
 % This script generates **Figure 2b** from the paper:
 % "Functional stability and recurrent STDP in rhythmogenesis"
 %
