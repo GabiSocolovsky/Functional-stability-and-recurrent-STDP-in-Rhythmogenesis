@@ -4,6 +4,7 @@ function [m_e,m_i,T_mean_m_e,T_mean_m_i,time] = Two_populations_full_rate_model_
 % "Functional stability and recurrent STDP in Rhythmogenesis"
  
 %   Description:
+
 %       Computes the dynamics of the firing rates of the neural network by using 
 %       Euler's method for ODE. In addition it computes the time period in the
 %       case of Rhythmic activity
@@ -14,12 +15,12 @@ function [m_e,m_i,T_mean_m_e,T_mean_m_i,time] = Two_populations_full_rate_model_
 %       m_i_history   -   m_i at time -d<t<0  
 %       J_ee          -   E-to-E connectivity matrix
 %       J_ei          -   I-to-E connectivity matrix
-%       J_IE          -   E-to-I connectivity matrix
-%       J_II          -   I-to-I connectivity matrix
+%       J_ie          -   E-to-I connectivity matrix
+%       J_ii          -   I-to-I connectivity matrix
 %       dt            -   time bin
 %       tf            -   final time of simulation
 
-%   Outputs: m_e,m_i,T_mean_m_e,T_mean_m_i,time
+%   Outputs: 
 
 %       m_e                      -   Dynamics of Excitatory neurons firing rates
 %       m_i                      -   Dynamics of Inhibitory neurons firing rates
