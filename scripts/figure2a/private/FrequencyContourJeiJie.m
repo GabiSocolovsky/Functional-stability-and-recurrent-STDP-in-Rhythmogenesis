@@ -1,5 +1,5 @@
 function f = FrequencyContourJeiJie(JbarD, Jee, Jei, Jie_arr, Jii, dt, tf)
-%FrequencyContourJeiJie Compute oscillation frequencies across Jie values.
+% FrequencyContourJeiJie Compute oscillation frequencies across Jie values.
 %
 %   f = FREQUENCYCONTOURJEIJIE(JbarD, Jee, Jei, Jie_arr, Jii, dt, tf)
 %   computes the oscillation frequency of a two-population network in the 

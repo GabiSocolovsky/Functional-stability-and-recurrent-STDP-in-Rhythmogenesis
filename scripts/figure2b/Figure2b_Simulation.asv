@@ -1,5 +1,5 @@
 %% Figure2b_Simulation %%
-% This script generates **Figure 2b** from the paper:
+% This script generates **Figure 2a** from the paper:
 % "Functional stability and recurrent STDP in rhythmogenesis"
 %
 % Description:
@@ -70,18 +70,19 @@ for i=1:length(Jii_arr)
         parfor k=1:length(Jee_arr)
             Jee=Jee_arr(k);
             JbarD=JbarD_arrlast(k);
-            if Jee<=2+Jii
+            if Jee<=2+Jii % 
                 f(:,k)=proj.common.FrequencyContourJbarJee(JbarD,Jbar_arrlast,Jee,Jii,dt,tf);
             else
                 f(:,k)=proj.common.FrequencyContourJbarJee(nan,Jbar_arrlast,Jee,Jii,dt,tf);
             end
         end
-            f=f/(Tunits); % frequency grid in units of Hz
+            f=f/(Tunits); % frequency units in Hz
             [JBAR_arrlast,JEE_arr]=meshgrid(Jbar_arrlast,Jee_arr);
-        [C,h]=contourf(JBAR_arrlast,JEE_arr,f',100, 'HandleVisibility', 'off'); % plot contour of frequency
+        [C,h]=contourf(JBAR_arrlast,JEE_arr,f',100, 'HandleVisibility', 'off');
         set(h,'LineColor','none')
         grid on
     end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%
     plot(JbarD_arr(i,:),Jee_arr,'Color','black','LineWidth',3,'Color',[(i-1)/(length(Jii_arr)+1) (i-1)/(length(Jii_arr)+1) (i-1)/(length(Jii_arr)+1)])
     hold on
     plot(0:0.01:(1+Jii),1+(0:0.01:(1+Jii)).^2/(1+Jii),'LineWidth',3,'Color',[(i-1)/(length(Jii_arr)+1) (i-1)/(length(Jii_arr)+1) (i-1)/(length(Jii_arr)+1)], 'HandleVisibility', 'off')

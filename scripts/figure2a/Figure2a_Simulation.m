@@ -1,14 +1,16 @@
-%% Figure2a_Simulation.m
-% This script generates **Figure 2a** from the paper:
+%% Figure2a_Simulation %%
+% This script generates **Figure 2b** from the paper:
 % "Functional stability and recurrent STDP in rhythmogenesis"
 %
 % Description:
-% Computes and plots the phase diagram of the neural network in the
-% [J_EI, J_IE] plane, showing the oscillation frequency as a contour plot.
-% Uses parfor loop for computing the frequency contour
 %
+%       Computes and plots the phase diagram of the neural network in the
+%       [J_EI, J_IE] plane, showing the oscillation frequency as a contour plot.
+%       Uses parfor loop for computing the frequency contour
+
 % Dependencies:
-% - FrequencyContourJeiJie.m 
+
+%       - FrequencyContourJeiJie.m
 %
 % Authors: Gabi Socolovsky & Maoz Shamir
 % Date: 2025-09-29
@@ -25,15 +27,15 @@ Jhat=(Jee+Jii)/2;
 %%% Parameters on the bifurcation line %%%
 syms wD JbarD
 if Jee>=Jii
-range=[0.1 5 ;0.01 pi/(2*D)];
-Y=vpasolve([(JbarD^2-Jee*Jii)^0.5==1/cos(wD*D-acos((Jee-Jii)/(2*(JbarD^2-Jee*Jii)^0.5))), T*wD==-tan(wD*D-acos((Jee-Jii)/(2*(JbarD^2-Jee*Jii)^0.5)))], [JbarD,wD],range); % the frequency on the bifurcation line
+    range=[0.1 5 ;0.01 pi/(2*D)];
+    Y=vpasolve([(JbarD^2-Jee*Jii)^0.5==1/cos(wD*D-acos((Jee-Jii)/(2*(JbarD^2-Jee*Jii)^0.5))), T*wD==-tan(wD*D-acos((Jee-Jii)/(2*(JbarD^2-Jee*Jii)^0.5)))], [JbarD,wD],range); % the frequency on the bifurcation line
 elseif Jee<Jii
     stop
-range=[0.1 5 ;0.01 pi/(2*D)];    
-Y=vpasolve([(JbarD^2-Jee*Jii)^0.5==1/cos(wD*D+atan2((JbarD^2-Jhat^2)^0.5,(Jee-Jii)/2)), T*wD==-tan(wD*D+atan2((JbarD^2-Jhat^2)^0.5,(Jee-Jii)/2))], [JbarD,wD],range); % the frequency on the bifurcation line
-end    
+    range=[0.1 5 ;0.01 pi/(2*D)];
+    Y=vpasolve([(JbarD^2-Jee*Jii)^0.5==1/cos(wD*D+atan2((JbarD^2-Jhat^2)^0.5,(Jee-Jii)/2)), T*wD==-tan(wD*D+atan2((JbarD^2-Jhat^2)^0.5,(Jee-Jii)/2))], [JbarD,wD],range); % the frequency on the bifurcation line
+end
 wD=double(Y.wD); % angular frequency on bif. line
-fD=wD/(2*pi); % frequency on bif. line 
+fD=wD/(2*pi); % frequency on bif. line
 JbarD=double(Y.JbarD); % Jbar on bif. line
 phi=acos((Jee-Jii)/(2*(JbarD^2-Jee*Jii)^0.5)); % phi
 psi=acos(Jhat/JbarD); % psi
@@ -46,7 +48,7 @@ Jie_arr=0:0.02:20; % array of Jie
 f=nan(length(Jei_arr),length(Jie_arr)); % create nan array of frequencies to a grid of Jei-Jie
 parfor i=1:length(Jei_arr) % compute parallely the frequencies on the Jei-Jie grid
     Jei=Jei_arr(i);
-    f(i,:)=FrequencyContourJeiJie(JbarD,Jee,Jei,Jie_arr,Jii,dt,tf); 
+    f(i,:)=FrequencyContourJeiJie(JbarD,Jee,Jei,Jie_arr,Jii,dt,tf);
 end
 f=f/(Tunits); % frequency in the Jei-Jie phase diagram, units in Hz
 [JEI_arr,JIE_arr]=meshgrid(Jei_arr,Jie_arr);
@@ -66,7 +68,7 @@ plot(Jei_arr,JbarD^2./Jei_arr,'Color','Black','LineWidth',3.5) % plot the bif. l
 hold on
 plot((1+Jii)*ones(1,length(0:20)),0:20,'Color','Black','LineWidth',3.5) % plot the line between FP and OI
 xlim([0 2])
-ylim([0 20]) 
+ylim([0 20])
 text(0.3,4,'$\mathrm{FP}$','interpreter','latex','FontSize',26)
 text(0.95,13,'$\mathrm{R}$','interpreter','latex','FontSize',26)
 text(1.65,10,'$\mathrm{OI}$','interpreter','latex','FontSize',26)
