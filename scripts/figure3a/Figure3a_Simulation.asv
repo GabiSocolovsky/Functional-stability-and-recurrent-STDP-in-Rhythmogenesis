@@ -10,8 +10,7 @@
  
 % IMPORTANT:
 
-%       - The plot of the nullclines and vectorflow is in
-%       "Figure3a_Plot.nb" of MATHEMATICA in this same folder.
+%       - The plot of the nullclines is in "Figure3a_plot"
 
 % Dependencies:
 
@@ -132,12 +131,12 @@ JienullY=interp1(Xiesorted,Yiesorted,JienullX,'spline'); % Jie values of the Jie
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Saving for figure %%%%%%%%%%%%%%%%%%%%
 
-Jeidotall=1000*(Jeidot(:)); % Strecthing the SIZE of arrows (multiply every component by 1000 - see line below as well), and saving them as vectors! 
+Jeidotall=1000*(Jeidot(:));
 Jiedotall=1000*(Jiedot(:));
 Jieall=round(Jie_grid',7);
 Jeiall=round(Jei_grid',7);
-Jeiall=Jeiall(:); % a vector of Jei values
-Jieall=Jieall(:); % a vector of Jie values
+Jeiall=Jeiall(:);
+Jieall=Jieall(:);
 
 save('vectorflow/Jeidot','Jeidotall','-double');
 save('vectorflow/Jiedot','Jiedotall','-double');
