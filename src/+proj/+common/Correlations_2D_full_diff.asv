@@ -1,4 +1,4 @@
-%% Correlations_2D_full_diff %%
+%% Correlations_2D %%
 function [Corr_ie_final,Corr_ei_final,Corr_ee_final,Corr_ii_final,m_e_T,m_i_T,T_mean_m_e,T_mean_m_i,Delta_extended] = Correlations_2D_full_diff(J_ee,J_ei,J_ie,J_ii,dt,tf)
 % This function is the simulation of the cross-correlations in the paper:
 % "Functional stability and recurrent STDP in Rhythmogenesis"
@@ -130,5 +130,5 @@ else
     Corr_ee_final=0; % we assume no STDP dynamics of individual intra-synapses
     Corr_ii_final=0; % we assume no STDP dynamics of individual intra-synapses
 end
-Delta_extended=-((length(Corr_ei_final(n,k,:))-1)*dt/2):dt:((length(Corr_ei_final(n,k,:))-1)*dt/2); % time of correlatrions
+Delta_extended=-((length(Corr_ei_final(n,k,:))-1)*dt/2):dt:((length(Corr_ei_final(n,k,:))-1)*dt/2);
 end
