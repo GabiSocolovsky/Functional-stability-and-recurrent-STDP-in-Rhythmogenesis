@@ -18,8 +18,6 @@ function [NullclineJei,NullclineJie,dJei,dJie,Jei_arr,Jie_arr] = NullclinesParal
 %       H_E,H_I - Hebbianity of Jei (I) and Jie (E)
 %       KpE, KmE, KpI, KmI - K of potentiation (p) or depression (m) for
 %       each synapse
-%       mu   -   non-linearity
-%       J_ie_max  -  JIEmax
 %       Jie (E) for potentiation (p) or depression (m)
 %       Jee          -   Jee order parameter
 %       Jii          -   Jii order parameter
@@ -36,13 +34,15 @@ function [NullclineJei,NullclineJie,dJei,dJie,Jei_arr,Jie_arr] = NullclinesParal
 
 %   Dependencies:
 
-%   NullclinesParallelPt2.m          -   computes for different Jie the nullcline (checks if there is a nullcline and finds it)
+%   Period_Peaks_full.m          -   Computes Time period when in the R region
 %
 % Authors: Gabi Socolovsky & Maoz Shamir
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Grid of Jei and Jie %%
+% Finding the Nullclines of the phase diagram %
+% These nullclines are approximations in the case of very small DeltaJ
+
 Jei_init=0.01;
 dJei=0.005;
 Jei_fin=1+Jii-dJei;
@@ -52,13 +52,24 @@ Jie_fin=J_ie_max-dJie;
 
 Jei_arr=Jei_init:dJei:Jei_fin;
 Jie_arr=Jie_init:dJie:Jie_fin;
-%% compute nullcline %%
+
+
+
+
+%dt=dtfirst;
+
 NullclineJei=zeros(length(Jei_arr),2);
 NullclineJie=zeros(length(Jie_arr),2);
 
-parfor i=1:length(Jei_arr) % computes parallely the nullcline for each Jei
+parfor i=1:length(Jei_arr)
     Jei=Jei_arr(i);
     [NullclineJei(i,:),NullclineJie(i,:)]=NullclinesParallelPt2(JbarD,lambda_i,lambda_e,alpha,tau_pE,tau_mE,tau_pI,tau_mI,H_E,H_I,KpE,KmE,KpI,KmI,mu,J_ie_max,dt,tf,Jee,Jii,Jei,Jie_arr,Jie_init,dJie,Jie_fin)
+    %dt=dtfirst;
+    %qei=0;
+    %qie=0;
+    %doneei=0;
+    %doneie=0;
+    %j=1;
 end
 
 
