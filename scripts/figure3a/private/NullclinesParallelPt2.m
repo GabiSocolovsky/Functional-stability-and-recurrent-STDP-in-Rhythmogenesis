@@ -1,9 +1,51 @@
+%% Nullclines Pt. 2 %%
 function [NullclineJei,NullclineJie] = NullclinesParallelPt2(JbarD,lambda_i,lambda_e,alpha,tau_pE,tau_mE,tau_pI,tau_mI,H_E,H_I,KpE,KmE,KpI,KmI,mu,J_ie_max,dt,tf,Jee,Jii,Jei,Jie_arr,Jie_init,dJie,Jie_fin)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+% This function computes the nullclines of Jei and Jie, belonges to:
+% "Functional stability and recurrent STDP in Rhythmogenesis"
 
-%indei=1;
-%indie=1;
+%   Description:
+
+%       The function computes for different Jie
+%       the nullcline (checks if there is a nullcline and finds it). The
+%       way of knowing if there is a nullcline is if Jeidot or Jiedot
+%       changes its sign. If we find these two values where the change of sign happens
+%       than I increase the resoultion in dJie and find between these two
+%       values a more accurate value
+
+%   Inputs: JbarD,lambda_i,lambda_e,alpha,tau_pE,tau_mE,tau_pI,tau_mI,H_E,H_I,KpE,KmE,KpI,KmI,mu,J_ie_max,Jee,Jii,dt,tf
+
+%       JbarD   -   Jbar on bifurcation
+%       lambda_i, lambda_e   -  learning rate for synapse Jei and Jie
+%       respectively
+%       tau_pE, tau_mE, tau_pI, tau_mI - typical times synapse Jei (I) or
+%       H_E,H_I - Hebbianity of Jei (I) and Jie (E)
+%       KpE, KmE, KpI, KmI - K of potentiation (p) or depression (m) for
+%       each synapse
+%       mu   -   non-linearity
+%       J_ie_max  -  JIEmax
+%       Jie (E) for potentiation (p) or depression (m)
+%       Jee          -   Jee order parameter
+%       Jii          -   Jii order parameter
+%       dt            -   time bin
+%       tf            -   final time of simulation
+
+%   Outputs:
+
+%       m_e                      -   Dynamics of Excitatory neurons firing rates
+%       m_i                      -   Dynamics of Inhibitory neurons firing rates
+%       T_mean_m_e,T_mean_m_i    -   Time period of m_e and m_i (sometimes
+%       different when in only the inhibitory neurons are rhythmic)
+%       time                     -   Vector of time
+
+%   Dependencies:
+
+%   Correlations_2D_full_diff.m  - computes correlations
+%
+% Authors: Gabi Socolovsky & Maoz Shamir
+% Date: 2025-09-29
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 qei=0; % the cue that dt is smaller (q=0 - no , q=1 - yes) for null of Jei
 qie=0; % the cue that dt is smaller (q=0 - no , q=1 - yes) for null of Jie
 doneei=0; % the cue for a point in nullcline of Jei that is already made
