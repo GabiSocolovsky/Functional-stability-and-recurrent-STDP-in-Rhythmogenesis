@@ -12,7 +12,7 @@ function [NullclineJei,NullclineJie] = NullclinesParallelPt2(JbarD,lambda_i,lamb
 %       than I increase the resoultion in dJie and find between these two
 %       values a more accurate value
 
-%   Inputs: JbarD,lambda_i,lambda_e,alpha,tau_pE,tau_mE,tau_pI,tau_mI,H_E,H_I,KpE,KmE,KpI,KmI,mu,J_ie_max,Jee,Jii,dt,tf
+%   Inputs: 
 
 %       JbarD   -   Jbar on bifurcation
 %       lambda_i, lambda_e   -  learning rate for synapse Jei and Jie

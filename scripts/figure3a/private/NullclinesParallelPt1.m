@@ -9,7 +9,7 @@ function [NullclineJei,NullclineJie,dJei,dJie,Jei_arr,Jie_arr] = NullclinesParal
 %       the function NullclinesParallelPt2 which computes for different Jie
 %       the nullcline (checks if there is a nullcline and finds it)
 
-%   Inputs: JbarD,lambda_i,lambda_e,alpha,tau_pE,tau_mE,tau_pI,tau_mI,H_E,H_I,KpE,KmE,KpI,KmI,mu,J_ie_max,Jee,Jii,dt,tf
+%   Inputs: 
 
 %       JbarD   -   Jbar on bifurcation
 %       lambda_i, lambda_e   -  learning rate for synapse Jei and Jie
@@ -28,11 +28,12 @@ function [NullclineJei,NullclineJie,dJei,dJie,Jei_arr,Jie_arr] = NullclinesParal
 
 %   Outputs:
 
-%       m_e                      -   Dynamics of Excitatory neurons firing rates
-%       m_i                      -   Dynamics of Inhibitory neurons firing rates
-%       T_mean_m_e,T_mean_m_i    -   Time period of m_e and m_i (sometimes
-%       different when in only the inhibitory neurons are rhythmic)
-%       time                     -   Vector of time
+%       NullclineJei    -   Nullcline of Jei
+% ,     NullclineJie    -   Nullcline of Jie
+%       dJei            -   resolution of Jei
+%       dJie            -   resolution of Jie
+%       Jei_arr         -   array of Jei
+%       Jie_arr         -   array of Jie
 
 %   Dependencies:
 
