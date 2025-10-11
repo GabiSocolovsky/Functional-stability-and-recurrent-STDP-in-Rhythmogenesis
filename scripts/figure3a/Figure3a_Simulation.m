@@ -10,7 +10,7 @@
  
 % IMPORTANT:
 
-%       - The plot of the nullclines and vectorflow is in
+%       - The plotting of the nullclines and vectorflow is in
 %       "Figure3a_Plot.nb" of MATHEMATICA in this same folder.
 
 % Dependencies:
