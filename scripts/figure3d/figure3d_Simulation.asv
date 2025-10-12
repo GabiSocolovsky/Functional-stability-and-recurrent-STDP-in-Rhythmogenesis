@@ -81,7 +81,7 @@ for i=1:length(val)
     alpha_cr(q,i)=alpha_vec(i); % found alpha critical
 end
 
-%%%%%% Extras (not required for the figure) %%%%%%
+ % more analytical expressions from paper % 
 thetamE=acos((1+(wD*tau_mE_arr).^2).^-0.5); 
 K_Ibar=1-alpha_arr;
 K_Iptilphi=cos(thetapI)*cos(thetapI+phi);
@@ -107,39 +107,18 @@ J_ie_final=Jiemax*(1-((1-K_Ibar).*(K_Ibar.*K_Emtilpsi-K_Itilpsi)./(K_Ibar.*K_Ept
 J_ie_final(J_ie_final<JbarD^2/(1+Jiimean))=nan;
 J_ei_final=JbarD^2./J_ie_final;
 f=(1-J_ie_final/Jiemax).^mu;
-ftag=-mu/Jiemax*(1-J_ie_final/Jiemax).^(mu-1);
 
-K_Ebar=f-alpha_arr;
 K_Etilphi=f.*K_Eptilphi-alpha_arr.*K_Emtilphi;
 K_Etilmphi=f.*K_Eptilmphi-alpha_arr.*K_Emtilmphi;
 K_Etilpsi=f.*K_Eptilpsi-alpha_arr.*K_Emtilpsi;
 
-gabs=(JbarD^2-Jeemean*Jiimean)^0.5;
-meb=(1+Jiimean-J_ei_final)./((1-Jeemean)*(1+Jiimean)+J_ei_final.*J_ie_final);
-mib=(1-Jeemean+J_ie_final)./((1-Jeemean)*(1+Jiimean)+J_ei_final.*J_ie_final);
-mit=(J_ie_final*(1+Jiimean)-JbarD^2)./(gabs*JbarD*((1-Jeemean)*(1+Jiimean)+JbarD^2));    
-met=JbarD./J_ie_final.*mit;
-Atil=-lambda_i*(K_Ibar.*mib.^2+K_Itilmphi.*mit.^2/(2*gabs));
-FbarE=lambda_e*ftag.*meb.*mib;
-FtilE=FbarE+lambda_e*ftag.*met.*mit/2.*K_Eptilpsi;
-
-
-MbarEE=lambda_e*K_Ebar.*meb.^2;
-Sigbar4=MbarEE+FbarE;
-
-MtilEE=MbarEE+lambda_e*K_Etilmphi.*met.^2/(2*gabs);
-Sigtil4=MtilEE+FtilE;
 
 
 
-JeidotFP=lambda_i*K_Ibar.*meb.*mib;
-JeidotR=JeidotFP+lambda_i*K_Itilpsi.*met.*mit/2;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 q=q+1;
 
 end
-%%%% plot the line %%%%%
 for q=1:length(tau_mI_vec)
 plot(alpha_cr(q,:),tau_mE_cr(q,:)*5,'color',[0.8500 0.3250 0.0980]*(q/length(tau_mI_vec)),'LineWidth',3)
 hold on
