@@ -180,15 +180,17 @@ lgd.Title.Interpreter = 'latex';
 set(gca,'FontSize',14)
 set(gca,'TickLabelInterpreter','latex')
 grid on
-%% The STDP dynamics of order parameters - continuous dynamics %%
-T=1; % time constant tau in 5msec
-dt=0.01;
+%% The STDP dynamics of order parameters - continuous dynamics (figure 3b pink traces and figure 3c) %%
+%%%%% Basic Parameters %%%%
+T=1; % time constant tau (5msec)
+dt=0.01; % timebin
 Tunits=5*10^-3; % 5ms for T=1
-tf=200;
+tf=200; % final time of neural dynamics
 D=0.4; % delay in msec
-Jiimean=0.4;
-Jeemean=0.6;
+Jiimean=0.4; % Jii order parameter
+Jeemean=0.6; % Jee order parameter
 Jhat=(Jeemean+Jiimean)/2;
+%%%%%%% Bifurcation properties %%%%%%%%%% 
 syms wD JbarD
 if Jeemean>=Jiimean
 range=[0.1 5 ;0.01 pi/(2*D)];
@@ -202,10 +204,10 @@ fD=wD/(2*pi); % in
 JbarD=double(Y.JbarD);
 phi=acos((Jeemean-Jiimean)/(2*(JbarD^2-Jeemean*Jiimean)^0.5));
 psi=acos(Jhat/JbarD);
-%%%%%%%%% STDP Parameters %%%%%%%%%
-N_e=1; % It is the same for analysing the order parameters in small fluctuations in individual synapses
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% STDP and grid Parameters %%%%%%%%%
+N_e=1;
 N_i=1;
-
 alpha=0.98; % relative depression %
 mu=0.01;% measure of linearity
 Jiemax=20; % J_ie_max
@@ -217,16 +219,16 @@ thetapI=acos((1+(wD*tau_pI)^2)^-0.5);
 thetamI=acos((1+(wD*tau_mI)^2)^-0.5);
 thetapE=acos((1+(wD*tau_pE)^2)^-0.5);
 thetamE=acos((1+(wD*tau_mE)^2)^-0.5);
-lambda_e=0.3;%0*200*15/1000; % excitatory synapses learning rate
+lambda_e=0.3; % excitatory synapses learning rate
 lambda_i=0.03; % inhibitory synapses learning rate
 lamf=1; % This is a scaling factor for the lambdas - in the FP regiion its 1, in the R region its lamf*some factor (0<some factor<1), it decreases tf as well
-H_E=-1;
+H_E=-1; 
 H_I=1;
-%%% zero order synapses %%%
-Jeimean=0.54;%0.32;%0.4;
-Jiemean=5.8;%10;%5;%JbarD^2/Jeimean+0.1;%10^-5;
-f=(1-Jiemean/Jiemax)^mu;
-ftag=-mu/Jiemax*(1-Jiemean/Jiemax)^(mu-1);
+Jeimean=0.54; % inital Jei order parameter
+Jiemean=5.8; % inital Jie order parameter
+f=(1-Jiemean/Jiemax)^mu; % synaptic dependent function
+ftag=-mu/Jiemax*(1-Jiemean/Jiemax)^(mu-1); % its derivative
+%%%%%%%%% STDP analytical expression %%%%%%%%%
 K_Ibar=1-alpha;
 K_Iptilphi=cos(thetapI)*cos(thetapI+phi);
 K_Imtilphi=cos(thetamI)*cos(thetamI-phi);
@@ -238,7 +240,7 @@ K_Itilmphi=K_Iptilmphi-alpha*K_Imtilmphi;
 K_Iptilpsi=cos(thetapI)*cos(thetapI+psi);
 K_Imtilpsi=cos(thetamI)*cos(thetamI-psi);
 K_Itilpsi=K_Iptilpsi-alpha*K_Imtilpsi;
-%
+
 K_Ebar=f-alpha;
 K_Eptilphi=cos(thetapE)*cos(thetapE-phi);
 K_Emtilphi=cos(thetamE)*cos(thetamE+phi);
@@ -251,16 +253,19 @@ K_Eptilmpsi=cos(thetapE)*cos(thetapE+psi);
 K_Emtilmpsi=cos(thetamE)*cos(thetamE-psi);
 K_Etilmpsi=f*K_Eptilmpsi-alpha*K_Emtilmpsi;
 
-gabs=(JbarD^2-Jeemean*Jiimean)^0.5;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Jei=Jeimean;
-Jie=Jiemean;
-Jee=Jeemean*ones(N_e,N_e);
-Jii=Jiimean*ones(N_i,N_i);
+gabs=(JbarD^2-Jeemean*Jiimean)^0.5; % absolute value of g
+
+Jei=Jeimean; % Jei order parameter
+Jie=Jiemean; % Jie order parameter
+Jee=Jeemean*ones(N_e,N_e); % Jee order parameter
+Jii=Jiimean*ones(N_i,N_i); % Ji order parameter
 J=[[Jee/N_e -Jei/N_i];[Jie/N_e -Jii/N_i]]; % connectivity matrix
 diagonal=eye(N_e+N_i);
 mfa=(diagonal-J)\ones(N_e+N_i,1); % The exact fixed point solution
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% Temporal Kernels %%%%%%%%%%%%%%%%%%%%%%
 [Corr_ie_final,Corr_ei_final,~,~,m_e_T,m_i_T,T_mean_m_e,T_mean_m_i,Delta_extended]=proj.common.Correlations_2D_full_diff(Jee,Jei,Jie,Jii,dt,tf);
 K_pE=1/tau_pE*exp(-Delta_extended*H_E/tau_pE).*heaviside(H_E*Delta_extended);
 K_mE=1/tau_mE*exp(Delta_extended*H_E/tau_mE).*heaviside(-H_E*Delta_extended);
@@ -268,21 +273,20 @@ K_pI=1/tau_pI*exp(-Delta_extended*H_I/tau_pI).*heaviside(H_I*Delta_extended);
 K_mI=1/tau_mI*exp(Delta_extended*H_I/tau_mI).*heaviside(-H_I*Delta_extended);
 
 
-t=1:1200;
-%check_arr=[reshape(check_ei.',1,[]) reshape(check_ie.',1,[])];
+t=1:1200; % time for dynamics
 J_ei_dot=zeros(N_e,N_i);
 J_ie_dot=zeros(N_i,N_e);
-dtlearn=1;
+dtlearn=1; % timebin for STDP dynamics
 
-J_ie_final=Jiemax*(1-((1-K_Ibar)*(K_Ibar*K_Emtilmpsi-K_Itilpsi)/(K_Ibar*K_Eptilmpsi-K_Itilpsi))^(1/mu)); % the place the
+J_ie_final=Jiemax*(1-((1-K_Ibar)*(K_Ibar*K_Emtilmpsi-K_Itilpsi)/(K_Ibar*K_Eptilmpsi-K_Itilpsi))^(1/mu)); % J asterisk (look in paper)
 
 syms f(x)
 f(x)=Jiemax*(1-(x*((1-x)*K_Emtilmpsi-(K_Iptilpsi-x*K_Imtilpsi))/((1-x)*K_Eptilmpsi-(K_Iptilpsi-x*K_Imtilpsi)))^(1/mu))-JbarD*((JbarD-2*gabs^2*(1-Jeemean)*(1-x)/(K_Iptilpsi-x*K_Imtilpsi))/(1+Jiimean+2*JbarD*gabs^2*(1-x)/(K_Iptilpsi-x*K_Imtilpsi)));
-alpha_cr=double(vpasolve(f,x,[0.1 0.9999]));
+alpha_cr=double(vpasolve(f,x,[0.1 0.9999])); % alpha critical
 J_ie_null_ei_leave=JbarD*((JbarD-2*gabs^2*(1-Jeemean)*K_Ibar/K_Itilpsi)/(1+Jiimean+2*JbarD*gabs^2*K_Ibar/K_Itilpsi)); % departue place of the Jei nullcline off the bifurcation line
 
-plot(JbarD^2/J_ie_final,J_ie_final,'*','Color',[0 0 1], 'HandleVisibility', 'off')
-%hold on
+plot(JbarD^2/J_ie_final,J_ie_final,'*','Color',[0 0 1], 'HandleVisibility', 'off') % plot J asterisk
+
 
 Jeimeanarr=[];
 Jiemeanarr=[];
@@ -290,40 +294,34 @@ Jiemeanarr=[];
 m_e_history=0.2;
 m_i_history=1.3;
 
-m_e_full=[];
-m_i_full=[];
-time_full=[];
+m_e_full=[]; % creat null m_e for full dynamics
+m_i_full=[]; % creat null m_i for full dynamics
+time_full=[]; % full time
 
+%%%%%% Create matrices of temporal kernels for integration in real time %%%
 tmaxSTDP=10*max([tau_mE tau_mI tau_pI tau_pE]); % history time for m for calculating STDP
-tSTDP=dt:dt:(tf + tmaxSTDP);
-[TSTDP,~]=meshgrid(tSTDP,tSTDP);
+tSTDP=dt:dt:(tf + tmaxSTDP); % time for STDP
+[TSTDP,~]=meshgrid(tSTDP,tSTDP); % make a matrix of these times
 
-Delta=TSTDP-TSTDP';
-KpI=1/tau_pI*exp(-Delta*H_I/tau_pI).*heaviside(H_I*Delta);
+Delta=TSTDP-TSTDP'; % Make Delta
+KpI=1/tau_pI*exp(-Delta*H_I/tau_pI).*heaviside(H_I*Delta); % temporal kernel, p - plus , m - minus
 KmI=1/tau_mI*exp(Delta*H_I/tau_mI).*heaviside(-H_I*Delta);
 KpE=1/tau_pE*exp(-Delta*H_E/tau_pE).*heaviside(H_E*Delta);
 KmE=1/tau_mE*exp(Delta*H_E/tau_mE).*heaviside(-H_E*Delta);
-
-KI=KpI-alpha*KmI;
-
-%%%% Bifurcation lines etc... %%%%
-%plot(JbarD^2./(0:0.1:20),0:0.1:20,'Color','Black','LineWidth',3)
-%hold on
-%plot((1+Jiimean)*ones(1,length(0:20)),0:20,'Color','Black','LineWidth',3)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+KI=KpI-alpha*KmI; % we define it outside the dynamics because it does not has a dependence in the synaptic dynamics
 
 Transtime=[];    
 
-for i=2:length(t)
+for i=2:length(t) % dynamics
     
     %%% construcing the eigenvectors on each time step %%%
-    Jeimean=mean(Jei(:));
-    Jiemean=mean(Jie(:));
+    Jeimean=mean(Jei(:)); % mean synapse Jei (order parameter)
+    Jiemean=mean(Jie(:)); % mean synapse Jie (order parameter)
     
     f=(1-Jiemean/Jiemax)^mu;
     
 
-    if i==4
+    if i==4 % start plotting the dynamics only after point #4 because the history of the first points are artificial and affect the STDP dynamics weird
         plot(Jeimean,Jiemean,'.','Color',[0.9 0.1 0.4])
         hold on
     elseif i>4
@@ -332,7 +330,7 @@ for i=2:length(t)
     Jeimeanarr(i)=Jeimean;
     Jiemeanarr(i)=Jiemean;
     
-    plot(JbarD^2/J_ie_final,J_ie_final,'*','Color',[0 0 1], 'HandleVisibility', 'off')
+    plot(JbarD^2/J_ie_final,J_ie_final,'*','Color',[0 0 1], 'HandleVisibility', 'off') % plot J asterisk
     
     xlim([0 2])
     ylim([0 20])
@@ -342,10 +340,10 @@ for i=2:length(t)
     
     drawnow
     
-    [m_e_now,m_i_now,T_mean_m_e,~,tnetwork]=proj.common.Two_populations_full_rate_model_history(m_e_history,m_i_history,Jee,Jei,Jie,Jii,dt,tf);
+    [m_e_now,m_i_now,T_mean_m_e,~,tnetwork]=proj.common.Two_populations_full_rate_model_history(m_e_history,m_i_history,Jee,Jei,Jie,Jii,dt,tf); % compute the neuronal dynamics m_e and m_i
     
-    m_e_now=m_e_now(1:end-1);
-    m_i_now=m_i_now(1:end-1);
+    m_e_now=m_e_now(1:end-1); % m_e of this current loop
+    m_i_now=m_i_now(1:end-1); % m_i of this current loop
     
     
     m_e_history=m_e_now(end-round(D/dt):end); % that is the history for the m_e and m_i for the calculation of the network dynamics
@@ -353,6 +351,8 @@ for i=2:length(t)
     
     KE=f*KpE-alpha*KmE;
     
+    %%%%%%% Take the m_e and m_i from previous steps in order to take them into
+    % account in the STDP dynamics %%%%%%%%%%%%%%%%%%%%%%%
     if i==2
         time_full=tnetwork;
         m_e_bef=m_e_now(1)*ones(1,length(0:dt:tmaxSTDP-dt));
@@ -362,18 +362,18 @@ for i=2:length(t)
         m_e_bef=m_e_full((end-tmaxSTDP/dt+1):end);
         m_i_bef=m_i_full((end-tmaxSTDP/dt+1):end);
     end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    Transtime(i)=time_full(end); % the times between each synaptic update
     
-    Transtime(i)=time_full(end);
-    
-    Jeidot=lambda_i*dt*( [m_i_bef m_i_now]*KI*[m_e_bef m_e_now]' - [m_i_bef 0*m_i_now]*KI*[m_e_bef 0*m_e_now]' )/tf;
-    Jiedot=lambda_e*dt*( [m_e_bef m_e_now]*KE*[m_i_bef m_i_now]' - [m_e_bef 0*m_e_now]*KE*[m_i_bef 0*m_i_now]' )/tf;
+    Jeidot=lambda_i*dt*( [m_i_bef m_i_now]*KI*[m_e_bef m_e_now]' - [m_i_bef 0*m_i_now]*KI*[m_e_bef 0*m_e_now]' )/tf; % compute the integral in STDP dynamics (see appendix of numerics)
+    Jiedot=lambda_e*dt*( [m_e_bef m_e_now]*KE*[m_i_bef m_i_now]' - [m_e_bef 0*m_e_now]*KE*[m_i_bef 0*m_i_now]' )/tf; % compute the integral in STDP dynamics (see appendix of numerics)
     
     
-    m_e_full=[m_e_full m_e_now];
-    m_i_full=[m_i_full m_i_now];
+    m_e_full=[m_e_full m_e_now]; % Add the current dynamics to the previous dynamics
+    m_i_full=[m_i_full m_i_now]; % Add the current dynamics to the previous dynamics
     
-    Jei=Jei+dtlearn*Jeidot;
-    Jie=Jie+dtlearn*Jiedot;
+    Jei=Jei+dtlearn*Jeidot; % update synapse
+    Jie=Jie+dtlearn*Jiedot; % update synapse
     
 end
 %% Plot the network activity of last rounds in Critical Rhythmogenesis %%
@@ -396,7 +396,6 @@ plot(ones(1,10)*Transtime(end-i)*Tunits,linspace(0,max(m_i_full(:)),10),'--','Co
 hold on
 end
 
-%xlim(Tunits*[Transtime(end-10)-1 Transtime(end-4)+1])
 xlim([1033 1039])
 ylim([0 2.5])
 lgd=legend({'$\mathrm{E}$','$\mathrm{I}$'},'Interpreter','latex','Location','NorthEast');
