@@ -1,12 +1,36 @@
-%% The MEAN synaptic dynamics - figure 3b lambda->0 %%
+%% Figure 3b-3c Simulation %%
+% This script generates **Figures 3b-3c** from the paper:
+% "Functional stability and recurrent STDP in rhythmogenesis"
+%
+% Description:
+
+%       - Computes the order parameter dynamics of Jei and Jie in the limit
+%       of slow learning (figure 3b)
+%       - Computes the order parameter dynamics of Jei and Jie for in
+%       a continuous simulation (pink traces in figure 3b)
+%       - Computes and shows the dynamics of the order parameters of m_E
+%       nad m_I in the continuous case.
+
+% Dependencies:
+
+%       - Correlations_2D_full_diff.m - computes the correlations
+%       - Two_populations_full_rate_model_history.m - computes the firing
+%       rates dynamics
+
+% Authors: Gabi Socolovsky & Maoz Shamir
+% Date: 2025-09-29
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Compute the order parameters dynamics (figure 3b, except pink trace)%%
+%%%%%%%%%%%%%% Basic Parameters %%%%%%%%%%%%%%%%
 T=1; % time constant tau in 5msec
 Tunits=5*10^-3; % 5ms for T=1
-dt=0.01;
-tf=200;
+dt=0.01; % time bin
+tf=200; % final time
 D=0.4; % delay in msec
-Jii=0.4;
-Jee=0.6;
+Jii=0.4; % Jii order parameter
+Jee=0.6; % Jee order parameter
 Jhat=(Jee+Jii)/2;
+%%%%%%% Bifurcation properties %%%%%%%%%% 
 syms wD JbarD
 if Jee>=Jii
 range=[0.1 5 ;0.01 pi/(2*D)];
@@ -15,15 +39,16 @@ elseif Jee<Jii
 range=[0.1 5 ;0.01 pi/D];    
 Y=vpasolve([(JbarD^2-Jee*Jii)^0.5==1/cos(wD*D-acos((Jee-Jii)/(2*(JbarD^2-Jee*Jii)^0.5))), T*wD==-tan(wD*D-acos((Jee-Jii)/(2*(JbarD^2-Jee*Jii)^0.5)))], [JbarD,wD],range); % the frequency on the bifurcation line
 end    
-wD=double(Y.wD);
-JbarD=double(Y.JbarD);
+wD=double(Y.wD); % angular frequency on bif. line
+JbarD=double(Y.JbarD); % Jbar on bif. line
 phi=acos((Jee-Jii)/(2*(JbarD^2-Jee*Jii)^0.5));
 psi=acos(Jhat/JbarD);
-%%%%%%%%% STDP Parameters %%%%%%%%%
-alpha_arr=[0.95:0.01:0.98 0.98]; % relative depression %
-Jei_arr=[0.1 0.2 0.5 0.1 0.75];
-Jie_arr=[10 9 10 5 6.5];
-mu=0.01;%0.015;%0.15;%0.015; % measure of linearity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% STDP and grid Parameters %%%%%%%%%
+alpha_arr=[0.95:0.01:0.98 0.98]; % relative depression (different values) %
+Jei_arr=[0.1 0.2 0.5 0.1 0.75]; % different starting points for Jei
+Jie_arr=[10 9 10 5 6.5]; % different starting points for Jie
+mu=0.01; % measure of linearity
 Jiemax=20; % J_ie_max
 tau_pE=2; % typical potentiation time of excitatory synapses
 tau_pI=2; % typical potentiation time of inhibitory synapses
@@ -33,69 +58,71 @@ thetapI=acos((1+(wD*tau_pI)^2)^-0.5);
 thetamI=acos((1+(wD*tau_mI)^2)^-0.5);
 thetapE=acos((1+(wD*tau_pE)^2)^-0.5);
 thetamE=acos((1+(wD*tau_mE)^2)^-0.5);
-lambda_e=4;%0*200*15/1000; % excitatory synapses learning rate
+lambda_e=4; % excitatory synapses learning rate
 lambda_i=0.4; % inhibitory synapses learning rate
 lamf=1; % This is a scaling factor for the lambdas - in the FP regiion its 1, in the R region its lamf*some factor (0<some factor<1), it decreases tf as well
 H_E=-1;
 H_I=1;
-%%%%%%%%% Generating the synapses matrix %%%%%%%%%
 N_e=1; % Size of excitatory population
 N_i=1; % Size of inhibitory population
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% zero order synapses %%%
-Jei=0.1;%JbarD^2/J_ie_final;
-Jie=10;%J_ie_final;%JbarD^2/Jeimean+0.1;%10^-5;
-[Corr_ie_final,Corr_ei_final,~,~,~,~,~,~,Delta_extended]=proj.common.Correlations_2D_full_diff(Jee,Jei,Jie,Jii,dt,tf);
-K_pE=1/tau_pE*exp(-Delta_extended*H_E/tau_pE).*heaviside(H_E*Delta_extended);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% Temporal Kernels %%%%%%%%%%%%%
+Jei=0.1; % arbitray values for computing in next lines the temporal kernels
+Jie=10; % arbitray values for computing in next lines the temporal kernels
+[Corr_ie_final,Corr_ei_final,~,~,~,~,~,~,Delta_extended]=proj.common.Correlations_2D_full_diff(Jee,Jei,Jie,Jii,dt,tf); % computing Delta_extended
+K_pE=1/tau_pE*exp(-Delta_extended*H_E/tau_pE).*heaviside(H_E*Delta_extended); % temporal kernels
 K_mE=1/tau_mE*exp(Delta_extended*H_E/tau_mE).*heaviside(-H_E*Delta_extended);
 K_pI=1/tau_pI*exp(-Delta_extended*H_I/tau_pI).*heaviside(H_I*Delta_extended);
 K_mI=1/tau_mI*exp(Delta_extended*H_I/tau_mI).*heaviside(-H_I*Delta_extended);
 
 
-% Define improved yellow and orange
+% Define neat yellow and orange
 orange = [1.0, 0.5, 0.0];  % Rich orange
 green  = [0.0, 0.7, 0.3];  % Natural green
 
-plot(JbarD^2./(0:0.1:20),0:0.1:20,'Color','Black','LineWidth',3)
+plot(JbarD^2./(0:0.1:20),0:0.1:20,'Color','Black','LineWidth',3) % plot bif. line
 hold on
-plot((1+Jii)*ones(1,length(0:20)),0:20,'Color','Black','LineWidth',3)
+plot((1+Jii)*ones(1,length(0:20)),0:20,'Color','Black','LineWidth',3) % plot line between FP and OI
 xlabel('$J_{EI}$','interpreter','latex','FontSize',18)
 ylabel('$J_{IE}$','interpreter','latex','FontSize',18)
 
 
-for p=1:length(alpha_arr)
+for p=1:length(alpha_arr) % runs dynamics for different alpha
     
     alpha=alpha_arr(p);
     Jei=Jei_arr(p);
-    Jie=Jie_arr(p);    
+    Jie=Jie_arr(p);
+    %%%%%% Can be found in paper %%%%%%%%%%%
     K_Ibar=1-alpha;
     K_Iptilpsi=cos(thetapI)*cos(thetapI+psi);
     K_Imtilpsi=cos(thetamI)*cos(thetamI-psi);
     K_Itilpsi=K_Iptilpsi-alpha*K_Imtilpsi;
     K_Eptilpsi=cos(thetapE)*cos(thetapE+psi);
     K_Emtilpsi=cos(thetamE)*cos(thetamE-psi);
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    t=1:10000;
-    dtlearn=1;
+    t=1:10000; % time for simulation per alpha
+    dtlearn=1; % timebin for STDP dynamics
     
-    J_ie_final=Jiemax*(1-((1-K_Ibar)*(K_Ibar*K_Emtilpsi-K_Itilpsi)/(K_Ibar*K_Eptilpsi-K_Itilpsi))^(1/mu)); % the place the    
-    plot(JbarD^2/J_ie_final,J_ie_final,'*','Color',[0 0 1],'MarkerSize',14,'LineWidth',1.6)
+    J_ie_final=Jiemax*(1-((1-K_Ibar)*(K_Ibar*K_Emtilpsi-K_Itilpsi)/(K_Ibar*K_Eptilpsi-K_Itilpsi))^(1/mu)); % the place where CR settles    
+    plot(JbarD^2/J_ie_final,J_ie_final,'*','Color',[0 0 1],'MarkerSize',14,'LineWidth',1.6) % plot this point
 
     
     
-    % Normalized interpolation factor
+    % Change colour per alpha %
     colgrad = (min(p,4) - 1) / (length(alpha_arr) - 1);  % Ranges from 0 to 1
     color_k = (1 - colgrad) * orange + colgrad * green;
     
     plot(Jei,Jie,'.','Color',color_k)
-    
-    Jeimeanarr(1)=Jei;
-    Jiemeanarr(1)=Jie;
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     
+    Jeimeanarr(1)=Jei; % Jei strating point of dynamics 
+    Jiemeanarr(1)=Jie; % Jie strating point of dynamics 
     
-    for i=2:length(t)
+    
+    
+    for i=2:length(t) % start dyanmics
         
         xlim([0 2])
         ylim([0 20])
@@ -106,32 +133,32 @@ for p=1:length(alpha_arr)
         drawnow
         
               
-        if Jei*Jie<JbarD^2 % in the FP regime we solve exactly
-            me=(1+Jii-Jei)/((1-Jee)*(1+Jii)+Jei*Jie);
-            mi=(1+Jie-Jee)/((1-Jee)*(1+Jii)+Jei*Jie);
-            Corr_ei=me*mi;
-            Corr_ie=Corr_ei';
+        if Jei*Jie<JbarD^2 % in the FP regime solve exactly
+            me=(1+Jii-Jei)/((1-Jee)*(1+Jii)+Jei*Jie); % m_E
+            mi=(1+Jie-Jee)/((1-Jee)*(1+Jii)+Jei*Jie); % m_I
+            Corr_ei=me*mi; % Corr_EI
+            Corr_ie=Corr_ei'; % Corr_IE
             J_ei_dot=lambda_i*((1-alpha)*Corr_ei); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
             J_ie_dot=lambda_e*(((Th_li_full(1-Jie/Jiemax)).^mu-alpha).*Corr_ie); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
         else % The R regime is solved with simulations
-            [Corr_ie,Corr_ei,~,~,m_e_T,m_i_T,T_mean_m_e,T_mean_m_i,Delta_extended]=proj.common.Correlations_2D_full_diff(Jee,Jei,Jie,Jii,dt,tf/(3*lamf));
-            for n=1:N_e
+            [Corr_ie,Corr_ei,~,~,m_e_T,m_i_T,T_mean_m_e,T_mean_m_i,Delta_extended]=proj.common.Correlations_2D_full_diff(Jee,Jei,Jie,Jii,dt,tf/(3*lamf)); % compute cross correlations
+            for n=1:N_e 
                 for k=1:N_i
                     J_ei_dot(n,k)=lambda_i*lamf*((K_pI-alpha*K_mI)*squeeze(Corr_ie(k,n,:))*dt);
                     J_ie_dot(k,n)=lambda_e*lamf*(((Th_li_full(1-Jie(k,n)/Jiemax))^mu*K_pE-alpha*K_mE)*squeeze(Corr_ei(n,k,:))*dt);
                 end
             end
-            lamf=1;
+            lamf=1; % reset this scaling
         end
         
-        Jei=Jei+dtlearn*J_ei_dot;
-        Jie=Jie+dtlearn*J_ie_dot;
+        Jei=Jei+dtlearn*J_ei_dot; % update
+        Jie=Jie+dtlearn*J_ie_dot; % update
         
-        Jeimeanarr(i)=Jei;
-        Jiemeanarr(i)=Jie;
+        Jeimeanarr(i)=Jei; % update
+        Jiemeanarr(i)=Jie; % update
         
         
-        plot(Jei,Jie,'.','Color',color_k ,'HandleVisibility', 'off')
+        plot(Jei,Jie,'.','Color',color_k ,'HandleVisibility', 'off') % plot the dyna
         
         if ((Jeimeanarr(i)-Jeimeanarr(i-1))^2+(Jiemeanarr(i)-Jiemeanarr(i-1))^2)^0.5<0.0001
             break;
@@ -154,14 +181,6 @@ set(gca,'FontSize',14)
 set(gca,'TickLabelInterpreter','latex')
 grid on
 
-% % create a new pair of axes inside current figure
-% axes('position',[.65 .175 .25 .25])
-% box on % put box around new pair of axes
-% indexOfInterestJei = (Jei < 0.45 & Jei > 0.4); % range of t near perturbation
-% indexOfInterestJie = (Jie < 7.7 & Jie > 7.35); % range of t near perturbation
-% 
-% plot(Jei(indexOfInterestJei),Jie(indexOfInterestJie)) % plot on new axes
-% axis tight
 
 %% The STDP dynamics of order parameters - continuous dynamics %%
 T=1; % time constant tau in 5msec
@@ -380,7 +399,7 @@ hold on
 end
 
 %xlim(Tunits*[Transtime(end-10)-1 Transtime(end-4)+1])
-xlim([103])
+xlim([1033 1039])
 ylim([0 2.5])
 lgd=legend({'$\mathrm{E}$','$\mathrm{I}$'},'Interpreter','latex','Location','NorthEast');
 legendJiiTitle=sprintf('$X$','Interpreter','latex');
