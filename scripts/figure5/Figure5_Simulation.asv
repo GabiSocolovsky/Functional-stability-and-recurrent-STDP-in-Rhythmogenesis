@@ -105,41 +105,42 @@ K_Emtilmphi=cos(thetamE).*cos(thetamE-phi);
 K_Eptilpsi=cos(thetapE)*cos(thetapE+psi);
 K_Emtilpsi=cos(thetamE).*cos(thetamE-psi);
 
-J_ie_final=Jiemax*(1-((1-K_Ibar).*(K_Ibar.*K_Emtilpsi-K_Itilpsi)./(K_Ibar.*K_Eptilpsi-K_Itilpsi)).^(1/mu)); % Jie asteerisk
+J_ie_final=Jiemax*(1-((1-K_Ibar).*(K_Ibar.*K_Emtilpsi-K_Itilpsi)./(K_Ibar.*K_Eptilpsi-K_Itilpsi)).^(1/mu)); % J as
 J_ie_final(J_ie_final<JbarD^2/(1+Jiimean))=nan;
-J_ei_final=JbarD^2./J_ie_final; % Jei asterisk
-f=(1-J_ie_final/Jiemax).^mu; % synaptic depndent function
-ftag=-mu/Jiemax*(1-J_ie_final/Jiemax).^(mu-1); % f derivative in Jie
+J_ei_final=JbarD^2./J_ie_final;
+f=(1-J_ie_final/Jiemax).^mu;
+ftag=-mu/Jiemax*(1-J_ie_final/Jiemax).^(mu-1);
 
 K_Ebar=f-alpha_arr;
 K_Etilphi=f.*K_Eptilphi-alpha_arr.*K_Emtilphi;
 K_Etilmphi=f.*K_Eptilmphi-alpha_arr.*K_Emtilmphi;
 K_Etilpsi=f.*K_Eptilpsi-alpha_arr.*K_Emtilpsi;
 
-gabs=(JbarD^2-Jeemean*Jiimean)^0.5; % absolute value of g
-meb=(1+Jiimean-J_ei_final)./((1-Jeemean)*(1+Jiimean)+J_ei_final.*J_ie_final); % m_e bar
-mib=(1-Jeemean+J_ie_final)./((1-Jeemean)*(1+Jiimean)+J_ei_final.*J_ie_final); % m_i bar
-mit=(J_ie_final*(1+Jiimean)-JbarD^2)./(gabs*JbarD*((1-Jeemean)*(1+Jiimean)+JbarD^2)); % m_i_tilde    
-met=JbarD./J_ie_final.*mit; % m_e_tilde
-FbarE=lambda_e*ftag.*meb.*mib; % F bar E
-FtilE=FbarE+lambda_e*ftag.*met.*mit/2.*K_Eptilpsi; % F tilde E
+gabs=(JbarD^2-Jeemean*Jiimean)^0.5;
+meb=(1+Jiimean-J_ei_final)./((1-Jeemean)*(1+Jiimean)+J_ei_final.*J_ie_final);
+mib=(1-Jeemean+J_ie_final)./((1-Jeemean)*(1+Jiimean)+J_ei_final.*J_ie_final);
+mit=(J_ie_final*(1+Jiimean)-JbarD^2)./(gabs*JbarD*((1-Jeemean)*(1+Jiimean)+JbarD^2));    
+met=JbarD./J_ie_final.*mit;
+Atil=-lambda_i*(K_Ibar.*mib.^2+K_Itilmphi.*mit.^2/(2*gabs));
+FbarE=lambda_e*ftag.*meb.*mib;
+FtilE=FbarE+lambda_e*ftag.*met.*mit/2.*K_Eptilpsi;
 
 
-MbarEE=lambda_e*K_Ebar.*meb.^2; % M bar EE
-Sigbar4=(MbarEE+FbarE); % eigenvalue from family IV in FP region
+MbarEE=lambda_e*K_Ebar.*meb.^2;
+Sigbar4=(MbarEE+FbarE);
 
 
-MtilEE=MbarEE+lambda_e*K_Etilmphi.*met.^2/(2*gabs); % M tilde EE
-Sigtil4=MtilEE+FtilE;  % eigenvalue from family IV in FP region
+MtilEE=MbarEE+lambda_e*K_Etilmphi.*met.^2/(2*gabs);
+Sigtil4=MtilEE+FtilE;
 
-JeidotFP=lambda_i*K_Ibar.*meb.*mib; % Jei time derivative in FP region
-JeidotR=JeidotFP+lambda_i*K_Itilpsi.*met.*mit/2; % Jei time derivative in R region
+JeidotFP=lambda_i*K_Ibar.*meb.*mib;
+JeidotR=JeidotFP+lambda_i*K_Itilpsi.*met.*mit/2;
 
 q=q+1;
 
 end
 
-%% Plot figure 5a %%
+
 figure;
 
 selected_taus = [4 5 6 7 8 9 10];
@@ -187,7 +188,7 @@ set(gca,'FontSize',13)
 set(gca,'TickLabelInterpreter','latex')
 grid on
 
-%% Plot Figure 5b: Normalized sum of Sigbar4 and Sigtil4 %%
+%%% Third Figure: Normalized sum of Sigbar4 and Sigtil4
 figure;
 
 selected_taus = [4 5 6 7 8 9 10];
