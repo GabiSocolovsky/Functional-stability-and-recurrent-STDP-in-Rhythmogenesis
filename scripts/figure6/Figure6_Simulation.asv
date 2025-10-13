@@ -6,7 +6,7 @@
 
 %       - Computes the STDP dynamics parallely (parfor) of the fluctuations in each family (fig.
 %       6a)
-%       - Saves the fluctuation in subfolder "data"
+%       - Saves the 
 %       - Computes the correlation coefficient in family IV (fig. 6b)
 %       - Computes the standar deviation across a population in m_{X,i} bar
 %       and m_{X,i} tilde (fig. 6c and fig. 6d)

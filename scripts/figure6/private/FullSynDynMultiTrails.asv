@@ -132,8 +132,8 @@ for i=1:length(t)
         stdmibar(i)=std(mfa(N_e+1:N_e+N_i));
         stdmetil(i)=nan; % no tilde component in FP region
         stdmitil(i)=nan;
-        Corr_ei=mfa(1:N_e)*mfa((N_e+1):(N_e+N_i))'; % Cross-correlation ei
-        Corr_ie=Corr_ei'; % Cross-correlation ie (same in FP region)
+        Corr_ei=mfa(1:N_e)*mfa((N_e+1):(N_e+N_i))'; % Correla_ei
+        Corr_ie=Corr_ei';
         J_ei_dot=lambda_i*((1-alpha)*Corr_ei); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
         J_ie_dot=lambda_e*(((Th_li_full(1-Jie/Jiemax)).^mu-alpha).*Corr_ie); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
     else % The R regime is solved with simulations
@@ -149,9 +149,11 @@ for i=1:length(t)
             end
         end
     end
-    noiseI=0.01; % noise component of Jei
-    noiseE=10*noiseI; % noise component of dJie
-    Jei=(Jei+dtlearn*(J_ei_dot+noiseI*randn(size(Jei)))).*heaviside(Jei+dtlearn*(J_ei_dot+noiseI*randn(size(Jei)))); % update
-    Jie=(Jie+dtlearn*(J_ie_dot+noiseE*randn(size(Jie)))).*heaviside(Jie+dtlearn*(J_ie_dot+noiseE*randn(size(Jie)))); % update
+    
+    noiseI=0.01;%0.0003;
+    noiseE=10*noiseI;
+    Jei=(Jei+dtlearn*(J_ei_dot+noiseI*randn(size(Jei)))).*heaviside(Jei+dtlearn*(J_ei_dot+noiseI*randn(size(Jei))));
+    Jie=(Jie+dtlearn*(J_ie_dot+noiseE*randn(size(Jie)))).*heaviside(Jie+dtlearn*(J_ie_dot+noiseE*randn(size(Jie))));
+    
 end
 end

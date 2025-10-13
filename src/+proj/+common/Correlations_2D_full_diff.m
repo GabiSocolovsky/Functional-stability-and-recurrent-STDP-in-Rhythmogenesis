@@ -17,7 +17,7 @@ function [Corr_ie_final,Corr_ei_final,Corr_ee_final,Corr_ii_final,m_e_T,m_i_T,T_
 %       dt            -   time bin
 %       tf            -   final time of simulation
 
-%   Outputs: Corr_ie_final,Corr_ei_final,Corr_ee_final,Corr_ii_final,m_e_T,m_i_T,T_mean_m_e,T_mean_m_i,Delta_extended
+%   Outputs: 
 
 %       Corr_ij_final , i,j=e,i  - correlations between i and j
 %       m_e_T                    - m_e in a period
