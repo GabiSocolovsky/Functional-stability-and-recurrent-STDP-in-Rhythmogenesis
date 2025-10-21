@@ -10,7 +10,6 @@
 %       - Computes the correlation coefficient in family IV (fig. 6b)
 %       - Computes the standar deviation across a population in m_{X,i} bar
 %       and m_{X,i} tilde (fig. 6c and fig. 6d)
-%      
 
 
 % Dependencies:
@@ -439,11 +438,8 @@ set(gca,'FontSize',14)
 set(gca,'TickLabelInterpreter','latex')
 grid on
 xlim([0 14000])
-%% Add asymptotic variance of family IV in figure of variances %%%
-%%% First we compute this value %%%
+%% Add asymptotic variance of family IV in figure of variances (dashed line in Fig 6a) %%%
 oldparam = sympref('HeavisideAtOrigin',1/2); % heaviside is 0.5 on zero
-dt=0.01; % time bin
-tf=200; % final time of simulation for network dynamics
 %%%%%%%%% Phase diagram features (bif. etc.) %%%%%%%
 T=1; % time constant 5msec tau
 D=0.4; % delay in msec
@@ -458,9 +454,9 @@ elseif Jeemean<Jiimean
     range=[0.1 5 ;0.01 pi/D];
     Y=vpasolve([(JbarD^2-Jeemean*Jiimean)^0.5==1/cos(wD*D-acos((Jeemean-Jiimean)/(2*(JbarD^2-Jeemean*Jiimean)^0.5))), T*wD==-tan(wD*D-acos((Jeemean-Jiimean)/(2*(JbarD^2-Jeemean*Jiimean)^0.5)))], [JbarD,wD],range); % the frequency on the bifurcation line
 end
-wD=double(Y.wD);
-fD=wD/(2*pi); % in
-JbarD=double(Y.JbarD);
+wD=double(Y.wD); % frequency on bif. line
+fD=wD/(2*pi); 
+JbarD=double(Y.JbarD); % Jbar on bif. line
 phi=acos((Jeemean-Jiimean)/(2*(JbarD^2-Jeemean*Jiimean)^0.5));
 psi=acos(Jhat/JbarD);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -478,8 +474,6 @@ thetapE=acos((1+(wD*tau_pE)^2)^-0.5);
 thetamE=acos((1+(wD*tau_mE)^2)^-0.5);
 lambda_e=10; % excitatory synapses learning rate
 lambda_i=1; % inhibitory synapses learning rate
-H_E=-1;
-H_I=1;
 %%%%%%%%% Generating the synapses matrix %%%%%%%%%
 N_e=40; % Size of excitatory population
 N_i=10; % Size of inhibitory population
@@ -512,7 +506,6 @@ f=(1-Jiemean/Jiemax)^mu; % synaptic depndent function
 ftag=-mu/Jiemax*(1-Jiemean/Jiemax)^(mu-1);
 
 K_Ebar=f-alpha;
-K_Etilpsi=f*K_Eptilpsi-alpha*K_Emtilpsi;
 K_Etilmphi=f*K_Eptilmphi-alpha*K_Emtilmphi;
 K_Etilphi=f*K_Eptilphi-alpha*K_Emtilphi;
 %%%%%%%% Building the vector around the zero order %%%%%%%%%
@@ -534,7 +527,7 @@ aR=-lambda_i*(K_Ibar*mib^2+K_Itilmphi*mit^2/(2*gabs));
 bR=lambda_i*(K_Ibar*meb^2+K_Itilphi*met^2/(2*gabs));
 cR=-lambda_e*(K_Ebar*mib^2+K_Etilphi*mit^2/(2*gabs));
 dR=lambda_e*(K_Ebar*meb^2+K_Etilmphi*met^2/(2*gabs));
-qR=lambda_e*ftag*(meb*mib+met*mit/2*K_Eptilpsi); % self deperssion coefficient    end
+qR=lambda_e*ftag*(meb*mib+met*mit/2*K_Eptilpsi); % self deperssion coefficient 
 % create the vectors
 for p=1:2
     if p==1 % first vectors in FP region
@@ -610,7 +603,7 @@ sigFP4=MEEbar+FEbar; % Sigma IV in FP
 sigR4=MEEtil+FEtil; % Sigma IV in R 
 etaFP4=(MEEbar+FEbar)/MIEbar; % Eta IV in FP
 etaR4=(MEEtil+FEtil)/MIEtil; % Eta IV in R
-Ta=etaFP4/etaR4*((1+etaR4^2)/(1+etaFP4^2))^0.5; % ratio
+Ta=etaFP4/etaR4*((1+etaR4^2)/(1+etaFP4^2))^0.5; % Coefficient named "a" matrix T in Appendix 6
 
 noiseEIVar=10^-4; % noise in EI synapses
 noiseIEVar=10^-2; % noise in IE synapses
@@ -624,8 +617,8 @@ Cxitilsq=diag([noiseEIVar*ones(1,N_e*N_i) noiseIEVar*ones(1,N_e*N_i)]);
 xitilsqmean=trace(transpose(VRproj)*VRproj*Cxitilsq)/(N_i-1); % xi tilde mean squared
 
 
-JeidotFP=lambda_i*K_Ibar.*meb.*mib; 
-JeidotR=JeidotFP+lambda_i*K_Itilpsi.*met.*mit/2;
+JeidotFP=lambda_i*K_Ibar.*meb.*mib; % Jei dot in the FP region
+JeidotR=JeidotFP+lambda_i*K_Itilpsi.*met.*mit/2; % Jei dot in the R region
 
 c4varFP=(xibarsqmean/abs(JeidotFP)+xitilsqmean/(abs(JeidotR)*Ta^2))/(-2*(sigFP4/JeidotFP+sigR4/abs(JeidotR))); % variance of family IV in FP region
 c4varR=(xibarsqmean*Ta^2/abs(JeidotFP)+xitilsqmean/(abs(JeidotR)))/(-2*(sigFP4/JeidotFP+sigR4/abs(JeidotR))); % variance of family IV in R region
@@ -638,11 +631,10 @@ plot(1:14000,c4var*ones(1,length(1:14000)),'--','Color','black','LineWidth',2)
 hold on
 
 lgd=legend({'','$\mathrm{I}$','','$\mathrm{II}$','','$\mathrm{III}$','','$\mathrm{IV}$','',''},'Interpreter','latex','Location','Northeast');
-%% Computing the autocorrelations
+%% Computing the autocorrelations coefficients (fig 6b)  %%
+% From the data we compute the autocorrelations coefficients
 % We assume here that we arrived Cri. Rhythm. and compute all the coefficients a,b,c,d,q in FP and R only once
 oldparam = sympref('HeavisideAtOrigin',1/2); % heaviside is 0.5 on zero
-dt=0.01; % the accuracy through all the script and auxiliary functions (except for the nullclines part)
-tf=200; % final time of simulation for network dynamics
 %%%%%%%%% Phase diagram features (bif. etc.) %%%%%%%
 T=1; % time constant 5msec tau
 D=0.4; % delay in msec
@@ -657,14 +649,15 @@ elseif Jeemean<Jiimean
     range=[0.1 5 ;0.01 pi/D];
     Y=vpasolve([(JbarD^2-Jeemean*Jiimean)^0.5==1/cos(wD*D-acos((Jeemean-Jiimean)/(2*(JbarD^2-Jeemean*Jiimean)^0.5))), T*wD==-tan(wD*D-acos((Jeemean-Jiimean)/(2*(JbarD^2-Jeemean*Jiimean)^0.5)))], [JbarD,wD],range); % the frequency on the bifurcation line
 end
-wD=double(Y.wD);
-fD=wD/(2*pi); % in
-JbarD=double(Y.JbarD);
+wD=double(Y.wD); % angular frequency on the bif. line
+fD=wD/(2*pi); % frequency on the bif. line
+JbarD=double(Y.JbarD); % Jbar on the bif. line
 phi=acos((Jeemean-Jiimean)/(2*(JbarD^2-Jeemean*Jiimean)^0.5));
 psi=acos(Jhat/JbarD);
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% STDP parameters %%%%%%%%%%%%%%
 alpha=0.98; % relative depression
-mu=0.01;%0.015;%0.15;%0.015; % measure of linearity
+mu=0.01;% measure of linearity
 Jiemax=20; % J_ie_max
 tau_pE=2; % typical potentiation time of excitatory synapses
 tau_pI=2; % typical potentiation time of inhibitory synapses
@@ -674,14 +667,14 @@ thetapI=acos((1+(wD*tau_pI)^2)^-0.5);
 thetamI=acos((1+(wD*tau_mI)^2)^-0.5);
 thetapE=acos((1+(wD*tau_pE)^2)^-0.5);
 thetamE=acos((1+(wD*tau_mE)^2)^-0.5);
-lambda_e=10;%0*200*15/1000; % excitatory synapses learning rate
+lambda_e=10; % excitatory synapses learning rate
 lambda_i=1; % inhibitory synapses learning rate
 H_E=-1;
 H_I=1;
 %%%%%%%%% Generating the synapses matrix %%%%%%%%%
 N_e=40; % Size of excitatory population
 N_i=10; % Size of inhibitory population
-%%% zero order synapses %%%
+%%% Analytical expressions from paper (p stands for plus and m for minus)
 K_Ibar=1-alpha;
 K_Iptilphi=cos(thetapI)*cos(thetapI+phi);
 K_Imtilphi=cos(thetamI)*cos(thetamI-phi);
@@ -702,11 +695,11 @@ K_Emtilmphi=cos(thetamE)*cos(thetamE-phi);
 K_Eptilpsi=cos(thetapE)*cos(thetapE+psi);
 K_Emtilpsi=cos(thetamE)*cos(thetamE-psi);
 
-J_ie_final=Jiemax*(1-((1-K_Ibar)*(K_Ibar*K_Emtilpsi-K_Itilpsi)/(K_Ibar*K_Eptilpsi-K_Itilpsi))^(1/mu)); % the place the
-Jiemean=J_ie_final;
+J_ie_final=Jiemax*(1-((1-K_Ibar)*(K_Ibar*K_Emtilpsi-K_Itilpsi)/(K_Ibar*K_Eptilpsi-K_Itilpsi))^(1/mu)); % Jie asterisk
+Jiemean=J_ie_final; % start from J asterisk (start from asymptotic value)
 Jeimean=JbarD^2/Jiemean;
 
-f=(1-Jiemean/Jiemax).^mu;
+f=(1-Jiemean/Jiemax).^mu; % synaptic depndent function
 ftag=-mu/Jiemax*(1-Jiemean/Jiemax)^(mu-1);
 
 K_Ebar=f-alpha;
@@ -717,31 +710,32 @@ K_Etilphi=f*K_Eptilphi-alpha*K_Emtilphi;
 meb=(1+Jiimean-Jeimean)/((1-Jeemean)*(1+Jiimean)+Jeimean*Jiemean);
 mib=(1-Jeemean+Jiemean)/((1-Jeemean)*(1+Jiimean)+Jeimean*Jiemean);
 
+% coeffiecnients in FP region %
 aFP=-lambda_i*K_Ibar*mib^2;
 bFP=lambda_i*K_Ibar*meb^2;
 cFP=-lambda_e*K_Ebar*mib^2;
 dFP=lambda_e*K_Ebar*meb^2;
 qFP=lambda_e*ftag*meb*mib;
 
-gabs=(JbarD^2-Jeemean*Jiimean)^0.5;
-mit=(JbarD^2/Jeimean*(1+Jiimean)-JbarD^2)/(gabs*JbarD*((1-Jeemean)*(1+Jiimean)+JbarD^2));
-met=JbarD/Jiemean*mit;
+gabs=(JbarD^2-Jeemean*Jiimean)^0.5; % absolute value of g
+mit=(JbarD^2/Jeimean*(1+Jiimean)-JbarD^2)/(gabs*JbarD*((1-Jeemean)*(1+Jiimean)+JbarD^2)); % mi tilde
+met=JbarD/Jiemean*mit; % me tilde
+% coeffiecnients in R region %
 aR=-lambda_i*(K_Ibar*mib^2+K_Itilmphi*mit^2/(2*gabs));
 bR=lambda_i*(K_Ibar*meb^2+K_Itilphi*met^2/(2*gabs));
 cR=-lambda_e*(K_Ebar*mib^2+K_Etilphi*mit^2/(2*gabs));
 dR=lambda_e*(K_Ebar*meb^2+K_Etilmphi*met^2/(2*gabs));
-qR=lambda_e*ftag*(meb*mib+met*mit/2*K_Eptilpsi); % self deperssion coefficient    end
-
-
+qR=lambda_e*ftag*(meb*mib+met*mit/2*K_Eptilpsi); % self deperssion coefficient
+% create the vectors
 for p=1:2
     
-    if p==1
+    if p==1 % first vectors in FP region
         a=aFP;
         b=bFP;
         c=cFP;
         d=dFP;
         q=qFP;
-    else
+    else % second vectors in R region
         a=aR;
         b=bR;
         c=cR;
@@ -749,40 +743,42 @@ for p=1:2
         q=qR;
     end
     
-    % create the vectors
+    % Eigenvectors of families
     vn=[ones(N_i-1,1) -diag(ones(1,N_i-1))];
     zvn=mat2cell(repmat(vn,1,N_e),N_i-1,N_i*ones(1,N_e));
-    vn=[blkdiag(zvn{:}) zeros(size((blkdiag(zvn{:})),1),2*N_e*N_i-size((blkdiag(zvn{:})),2))]'/2^0.5;
+    vn=[blkdiag(zvn{:}) zeros(size((blkdiag(zvn{:})),1),2*N_e*N_i-size((blkdiag(zvn{:})),2))]'/2^0.5; % family I
     
     ve=[ones(N_e-1,1) -diag(ones(1,N_e-1))];
     zve=mat2cell(repmat(ve,1,N_i),N_e-1,N_e*ones(1,N_i));
-    ve=[zeros(size((blkdiag(zve{:})),1),2*N_e*N_i-size((blkdiag(zve{:})),2)) blkdiag(zve{:})]'/2^0.5;
+    ve=[zeros(size((blkdiag(zve{:})),1),2*N_e*N_i-size((blkdiag(zve{:})),2)) blkdiag(zve{:})]'/2^0.5; % family II
     
     vaie=repmat([ones(N_e-1,1) -diag(ones(1,N_e-1))],1,N_i);
     zvaei=mat2cell(repmat(ones(1,N_i),1,N_e-1),1,N_i*ones(1,N_e-1));
     vaei=[ones(N_e-1,N_i) -blkdiag(zvaei{:})];
-    va=[(a-q)*vaei c*vaie]'/(((a-q)^2+c^2)*2*N_i)^0.5;
+    va=[(a-q)*vaei c*vaie]'/(((a-q)^2+c^2)*2*N_i)^0.5; % III
     
     vdei=repmat([ones(N_i-1,1) -diag(ones(1,N_i-1))],1,N_e);
     zvdie=mat2cell(repmat(ones(1,N_e),1,N_i-1),1,N_e*ones(1,N_i-1));
     vdie=[ones(N_i-1,N_e) -blkdiag(zvdie{:})];
-    vd=[b*vdei (d+q)*vdie]'/((b^2+(d+q)^2)*2*N_e)^0.5;
+    vd=[b*vdei (d+q)*vdie]'/((b^2+(d+q)^2)*2*N_e)^0.5; % IV
     
-    vu=[ones(1,2*N_e*N_i) ; ones(1,N_e*N_i) -ones(1,N_e*N_i)]'/(2*N_e*N_i)^0.5;
+    vu=[ones(1,2*N_e*N_i) ; ones(1,N_e*N_i) -ones(1,N_e*N_i)]'/(2*N_e*N_i)^0.5; % uniform family
     
-    
+    % Graham Schmidt %
     vn=gsog(vn);
     va=gsog(va);
     vd=gsog(vd);
     vu=gsog(vu);
     ve=gsog(ve);
     
+    % Normalize eigenvectors %    
     vn=vn./repmat(sum(vn.^2,1).^0.5,N_e*N_i*2,1);
     va=va./repmat(sum(va.^2,1).^0.5,N_e*N_i*2,1);
     vd=vd./repmat(sum(vd.^2,1).^0.5,N_e*N_i*2,1);
     vu=vu./repmat(sum(vu.^2,1).^0.5,N_e*N_i*2,1);
     ve=ve./repmat(sum(ve.^2,1).^0.5,N_e*N_i*2,1);
     
+    % put all of them in a set    
     if p==1
         VFP=[vn  ve  va  vd  vu];
     else
@@ -793,62 +789,65 @@ end
 
 VR=sign(VR.*VFP).*VR; % We want the eigenvectors in each region to have the same signs
 
+% Sizes of families
 vn_size=size(vn,2);
 ve_size=size(ve,2);
 va_size=size(va,2);
 vd_size=size(vd,2);
 vu_size=size(vu,2);
 
-numtrails=100;
-tflearn=14000;
+numtrails=100; % number of trials
+tflearn=14000; % Time of STDP simulation
 
-t0acorr=2000;
-tfacorr=14000;
-maxlag=900;
-acorr4=zeros(1,length(0:maxlag));
+t0acorr=2000; % inital time for computing autocorrelation
+tfacorr=14000; % final time for computing autocorrelation
+maxlag=900; % maximum difference in time for autocorr
+acorr4=zeros(1,length(0:maxlag)); % autocorrelation (empty)
 
 
-for i=1:numtrails
+for i=1:numtrails % computing autocorrelations in each trial
     
+    dJ_arr=squeeze(dJarralltrails(i,:,t0acorr:tfacorr))'; % taking synaptic fluctuaitons when system arrives CR state    
+    % Fluctuations in FP region %
+    yFP=heaviside(JbarD^2-squeeze(Jeimeandynalltrails(i,t0acorr:tfacorr)).*squeeze(Jiemeandynalltrails(i,t0acorr:tfacorr)))'; % making a vector saying when in FP region (1) and when not (0)
+    repyFP=repmat(yFP,1,N_e*N_i*2); % replicating this vector to the size of a network
+    dJ_arrFP=dJ_arr.*repyFP; % multiplying the fluctuations with repyFP, so only fluctuations in the FP remain
     
-    dJ_arr=squeeze(dJarralltrails(i,:,t0acorr:tfacorr))';
-    yFP=heaviside(JbarD^2-squeeze(Jeimeandynalltrails(i,t0acorr:tfacorr)).*squeeze(Jiemeandynalltrails(i,t0acorr:tfacorr)))';
-    repyFP=repmat(yFP,1,N_e*N_i*2);
-    dJ_arrFP=dJ_arr.*repyFP;
+    % Fluctuatuions in R region
+    yR=heaviside(-JbarD^2+squeeze(Jeimeandynalltrails(i,t0acorr:tfacorr)).*squeeze(Jiemeandynalltrails(i,t0acorr:tfacorr)))'; % making a vector saying when in FP region (1) and when not (0)
+    repyR=repmat(yR,1,N_e*N_i*2); % replicating this vector to the size of a network
+    dJ_arrR=dJ_arr.*repyR; % multiplying the fluctuations with repyR, so only fluctuations in the R remain
     
-    yR=heaviside(-JbarD^2+squeeze(Jeimeandynalltrails(i,t0acorr:tfacorr)).*squeeze(Jiemeandynalltrails(i,t0acorr:tfacorr)))';
-    repyR=repmat(yR,1,N_e*N_i*2);
-    dJ_arrR=dJ_arr.*repyR;
+    % Find coefficients in each family
+    coef=VFP\dJ_arrFP'+VR\dJ_arrR'; % all coefficients
+    coef1=diag([ones(1,vn_size) zeros(1,ve_size) zeros(1,va_size) zeros(1,vd_size) zeros(1,vu_size)])*coef; % only coeff. in family I appear
+    coef2=diag([zeros(1,vn_size) ones(1,ve_size) zeros(1,va_size) zeros(1,vd_size) zeros(1,vu_size)])*coef; % II
+    coef3=diag([zeros(1,vn_size) zeros(1,ve_size) ones(1,va_size) zeros(1,vd_size) zeros(1,vu_size)])*coef; % III
+    coef4=diag([zeros(1,vn_size) zeros(1,ve_size) zeros(1,va_size) ones(1,vd_size) zeros(1,vu_size)])*coef; % IV
+    coef5=diag([zeros(1,vn_size) zeros(1,ve_size) zeros(1,va_size) zeros(1,vd_size) ones(1,vu_size)])*coef; % uniform family
     
-    coef=VFP\dJ_arrFP'+VR\dJ_arrR';
-    coef1=diag([ones(1,vn_size) zeros(1,ve_size) zeros(1,va_size) zeros(1,vd_size) zeros(1,vu_size)])*coef;
-    coef2=diag([zeros(1,vn_size) ones(1,ve_size) zeros(1,va_size) zeros(1,vd_size) zeros(1,vu_size)])*coef;
-    coef3=diag([zeros(1,vn_size) zeros(1,ve_size) ones(1,va_size) zeros(1,vd_size) zeros(1,vu_size)])*coef;
-    coef4=diag([zeros(1,vn_size) zeros(1,ve_size) zeros(1,va_size) ones(1,vd_size) zeros(1,vu_size)])*coef;
-    coef5=diag([zeros(1,vn_size) zeros(1,ve_size) zeros(1,va_size) zeros(1,vd_size) ones(1,vu_size)])*coef;
+    % Computing autocorrrelation
+    coef4st=coef4(:,1:end-1000); % take the coefficients to up to a certain point in time
+    Tint=size(coef4st,2); % the overall time
     
-    coef4st=coef4(:,1:end-1000);
-    Tint=size(coef4st,2);
-    
-    parfor j=0:maxlag
+    parfor j=0:maxlag % parallely compute the autocorrelations
         acorr4parfor(1+j)=trace(coef4st*coef4(:,(1+j):(j+Tint))')/(Tint*vd_size);
     end
     
-    acorr4(i,:)=acorr4parfor;
+    acorr4(i,:)=acorr4parfor; % put the autocorrelation for a given tau (lag) in a certain row
 end
 
-save('data/AutoCorrV4','acorr4');
-
-%%
+save('data/AutoCorrV4','acorr4'); % save
+%% Plot the autocorrelation coefficient (numerical and analytical - figure 6b) %%
 figure(4)
 
-stdshade(acorr4./acorr4(:,1),0.3,[0.90, 0.40, 0.35],[],[])
+stdshade(acorr4./acorr4(:,1),0.3,[0.90, 0.40, 0.35],[],[]) % autocorrelation coefficient numerically
 hold on
 acorr0=c4var;
-tau=0:900;
+tau=0:900; % lag time
 sig4=(sigFP4/JeidotFP+sigR4/abs(JeidotR))/(1/JeidotFP+1/abs(JeidotR));
 typtime=1/abs(sig4);
-plot(tau,exp(tau*(sigFP4/JeidotFP+sigR4/abs(JeidotR))/(1/JeidotFP+1/abs(JeidotR))),'--','Color','black')
+plot(tau,exp(tau*(sigFP4/JeidotFP+sigR4/abs(JeidotR))/(1/JeidotFP+1/abs(JeidotR))),'--','Color','black') % plot autocorrelation coefficient analytically
 xlabel('$\tau \ [\mathrm{a.u.}]$','interpreter','latex','FontSize',18)
 ylabel('$\mathrm{\mathcal{\rho}_{IV}(\tau)}$','interpreter','latex','FontSize',18)
 %lgd=legend({'$V_{0}$','$V_{E}$','$V_{A}$','$V_{D+E}$'},'Interpreter','latex','Location','Northeast');
