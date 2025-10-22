@@ -395,7 +395,7 @@ for i=1:numtrails % run on different trials
 end
 
 save('data/VolsqFULL','Volsq1','Volsq2','Volsq3','Volsq4','Volsq5'); % Save in subfolder \data
-%% Plotting the Var of every family and the SD in each population %%
+%% Plotting the Var of every family (figure 6a) and the SD in each population (figure 6c-6d) %%
 
 figure(1)
 stdshade(stdmebar_alltrails,0.3,[0.90, 0.40, 0.35],[],[])
