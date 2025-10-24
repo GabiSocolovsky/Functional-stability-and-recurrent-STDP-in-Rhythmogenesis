@@ -47,7 +47,7 @@ for p=0:1 % p=0 for J_{XX}=0 otherwise JEE=0.6 and JII=0.4
     %%%%%%%%% Phase diagram features (bif. etc.) %%%%%%%
     Tunits=5*10^-3; % 5 msec is T=1
     T=1; % time constant 5msec tau
-    D=0.4; % delay in msec
+    D=0.4; % delay 
     Jhat=(Jeemean+Jiimean)/2;
     syms wD JbarD
     if Jeemean>=Jiimean
