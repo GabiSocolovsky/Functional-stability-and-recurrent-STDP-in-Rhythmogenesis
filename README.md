@@ -1,4 +1,4 @@
-[README.md.txt](https://github.com/user-attachments/files/23135314/README.md.txt)
+[README.md.txt](https://github.com/user-attachments/files/23135345/README.md.txt)
 # Functional stability and recurrent STDP in Rhythmogenesis 
 
 These scripts and functions generate the figures from the paper "Functional stability and recurrent STDP in Rhythmogenesis"
@@ -18,8 +18,8 @@ These scripts and functions generate the figures from the paper "Functional stab
 ## Quick start
 
 #### Install path
-In MATLAB run:
-cd('path/to/this/repo') % Enter here the path of the repository
+In MATLAB run (enter the repository path on your computer):
+cd('path/to/this/repo')  
 setup
 
 #### Generate Figures 
