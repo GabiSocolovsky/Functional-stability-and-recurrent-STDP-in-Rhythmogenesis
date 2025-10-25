@@ -1,4 +1,7 @@
 [README.md.txt](https://github.com/user-attachments/files/23135371/README.md.txt)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17438284.svg)](https://doi.org/10.5281/zenodo.17438284)
+
 # Functional stability and recurrent STDP in Rhythmogenesis 
 
 These scripts and functions generate the figures from the paper "Functional stability and recurrent STDP in Rhythmogenesis"
