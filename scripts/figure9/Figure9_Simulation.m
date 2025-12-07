@@ -63,7 +63,7 @@ H_I=1;
 
 colo=[0.2, 0.6, 0.2]; % Green
 
-filename='data\SparseDynamicsp0.3.mat'; % Second run
+filename='data\SparseDynamicsp0.3error.mat'; % Second run
 p=0.3; % sparsness of connectivity
 Jeimean=0.1; % inital Jei order parameter
 Jiemean=0.3; % initial Jie order parameter
@@ -155,7 +155,6 @@ Transtime=[]; % The time before each synaptic update
 timebinsave=round((tf*tflearn/dt)/50); % When to save
 
 
-
 for i=2:length(t) % dynamics
     
     %%% construcing the eigenvectors on each time step %%%
@@ -220,9 +219,7 @@ for i=2:length(t) % dynamics
     end
     
     
-    
 end
-
 %% Plot figure 9 %%
 figure(2)
 plot(0:0.01:2,(JbarD^2)./(0:0.01:2),'LineWidth',2.5,'Color','Black')

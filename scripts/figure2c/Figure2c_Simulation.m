@@ -15,6 +15,7 @@
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+oldparam = sympref("HeavisideAtOrigin",1/2); % 0.5 at the origin for heaviside
 %%%%%%%%%% Parameters %%%%%%%%%%%%%%%
 dt=0.01; % time bin
 tf=200; % final time

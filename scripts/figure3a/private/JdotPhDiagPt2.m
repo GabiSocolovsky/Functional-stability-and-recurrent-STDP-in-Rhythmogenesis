@@ -38,8 +38,6 @@ function [vei,vie] = JdotPhDiagPt2(Jei,Jie_arr,Jee,Jii,JbarD,lambda_i,lambda_e,a
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 vei=zeros(1,length(Jie_arr)); % vector of Jeidot for different Jie (empty)
 vie=zeros(1,length(Jie_arr)); % vector of Jiedot for different Jie (empty)
 

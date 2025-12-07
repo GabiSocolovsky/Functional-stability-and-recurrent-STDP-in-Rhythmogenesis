@@ -18,6 +18,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%% Basic Parameters %%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+oldparam = sympref("HeavisideAtOrigin",1/2); % 0.5 at the origin for heaviside
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 T=1; % time constant 5msec tau
 dt=0.01; % time bin

@@ -30,8 +30,7 @@ function f = FrequencyContourJeiJie(JbarD, Jee, Jei, Jie_arr, Jii, dt, tf)
 %   DEPENDENCIES:
 %       Two_populations_full_rate_model_history.m
 %
-%
-
+%%
     % Initialize frequency vector
     f = nan(1, length(Jie_arr));
 

@@ -30,8 +30,6 @@ function f = FrequencyContourJbarJee(JbarD,Jbar_arrlast,Jee,Jii,dt,tf)
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
-oldparam = sympref("HeavisideAtOrigin",0); % zero at the origin for heaviside
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 f=nan(1,length(Jbar_arrlast)); % frequency grid (empty)
 for j=1:length(Jbar_arrlast)

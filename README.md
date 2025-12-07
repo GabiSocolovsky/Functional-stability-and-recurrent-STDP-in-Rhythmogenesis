@@ -40,8 +40,5 @@ Any figure of a simulation from the paper can be found in `figures/` in the foll
 
 ## Notes 
 - Folders named "private" in some of the `scripts/figureX` folders contain auxiliary functions which are used only by their main script "FigureX_Simulation".
-<<<<<<< HEAD
 - Folders named "data" in some of the `scripts/figureX` folders contain some of the data generated and saved by the their main script "FigureX_Simulation".
-=======
-- Folders named "data" in some of the `scripts/figureX` folders contain some of the data generated and saved by the their main script "FigureX_Simulation".
->>>>>>> 889df578cf57cf9ef7ef663a2506782941e011f3
+

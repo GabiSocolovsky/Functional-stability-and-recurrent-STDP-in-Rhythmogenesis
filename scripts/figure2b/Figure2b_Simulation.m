@@ -17,6 +17,7 @@
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+oldparam = sympref("HeavisideAtOrigin",1/2); % 0.5 at the origin for heaviside
 %%%%%%%%%%%% Parameters %%%%%%%%%%%%%%%
 T=1; % Time scale for the firing rate dynamics - Tau_m=1
 Tunits  = 5e-3; % Time unit = Tau_m = 5 ms

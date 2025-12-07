@@ -1,11 +1,11 @@
-%% Two populations rate model %%
+%% Two populations rate model sparse %%
 function [m_e,m_i,T_mean_m_e,T_mean_m_i,time] = Two_populations_full_rate_model_sparse(m_e_history,m_i_history,J_ee,J_ei,J_ie,J_ii,dt,tf,p)
 % This function is the simulation of the neural dynamics in the paper:
 % "Functional stability and recurrent STDP in Rhythmogenesis"
 
 %   Description:
 
-%       Computes the dynamics of the firing rates of the neural network by using
+%       Computes the dynamics of the firing rates of a diluted neural network by using
 %       Euler's method for ODE. In addition it computes the time period in the
 %       case of Rhythmic activity
 
@@ -35,8 +35,6 @@ function [m_e,m_i,T_mean_m_e,T_mean_m_i,time] = Two_populations_full_rate_model_
 % Authors: Gabi Socolovsky & Maoz Shamir
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %%%%%%% Network parameters %%%%%%%
 I_0=1; % Constant external input
 tau=1; % Time scale for the firing rate dynamics - 5ms

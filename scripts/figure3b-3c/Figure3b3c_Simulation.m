@@ -21,6 +21,7 @@
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+oldparam = sympref("HeavisideAtOrigin",1/2); % 0.5 at the origin for heaviside
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Compute the order parameters dynamics (figure 3b, except pink trace)%%
 %%%%%%%%%%%%%% Basic Parameters %%%%%%%%%%%%%%%%

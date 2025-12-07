@@ -36,8 +36,6 @@ function [m_e,m_i,T_mean_m_e,T_mean_m_i,time] = Two_populations_full_rate_model_
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
-oldparam = sympref("HeavisideAtOrigin",0); % zero at the origin for heaviside
 %%%%%%% Network parameters %%%%%%%
 I_0=1; % Constant external input
 tau=1; % Time scale for the firing rate dynamics - 5ms
