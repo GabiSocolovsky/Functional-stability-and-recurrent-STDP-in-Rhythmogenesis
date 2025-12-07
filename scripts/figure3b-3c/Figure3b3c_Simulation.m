@@ -141,13 +141,13 @@ for p=1:length(alpha_arr) % runs dynamics for different alpha
             Corr_ei=me*mi; % Corr_EI
             Corr_ie=Corr_ei'; % Corr_IE
             J_ei_dot=lambda_i*((1-alpha)*Corr_ei); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
-            J_ie_dot=lambda_e*(((Th_li_full(1-Jie/Jiemax)).^mu-alpha).*Corr_ie); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
+            J_ie_dot=lambda_e*(((proj.common.Th_li_full(1-Jie/Jiemax)).^mu-alpha).*Corr_ie); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
         else % The R regime is solved with simulations
             [Corr_ie,Corr_ei,~,~,m_e_T,m_i_T,T_mean_m_e,T_mean_m_i,Delta_extended]=proj.common.Correlations_2D_full_diff(Jee,Jei,Jie,Jii,dt,tf/(3*lamf)); % compute cross correlations
             for n=1:N_e 
                 for k=1:N_i
                     J_ei_dot(n,k)=lambda_i*lamf*((K_pI-alpha*K_mI)*squeeze(Corr_ie(k,n,:))*dt);
-                    J_ie_dot(k,n)=lambda_e*lamf*(((Th_li_full(1-Jie(k,n)/Jiemax))^mu*K_pE-alpha*K_mE)*squeeze(Corr_ei(n,k,:))*dt);
+                    J_ie_dot(k,n)=lambda_e*lamf*(((proj.common.Th_li_full(1-Jie(k,n)/Jiemax))^mu*K_pE-alpha*K_mE)*squeeze(Corr_ei(n,k,:))*dt);
                 end
             end
             lamf=1; % reset this scaling

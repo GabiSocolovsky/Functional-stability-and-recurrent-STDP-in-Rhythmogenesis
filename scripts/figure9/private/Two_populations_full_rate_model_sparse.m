@@ -64,10 +64,10 @@ if (size(m_e_history,2)==1) && length(size(m_i_history,2))==1  % checks if the h
         m_e_history=m_e_history';
         m_i_history=m_i_history';
     end
-    m_e(:,1)=m_e_history + (dt/tau)*(-m_e_history+Th_li_full(I_0 + (J_ee*m_e_history')'/(N_e*q) - (J_ei*m_i_history')'/(N_i*q))); % first step
-    m_i(:,1)=m_i_history + (dt/tau)*(-m_i_history+Th_li_full(I_0 + (J_ie*m_e_history')'/(N_e*q) - (J_ii*m_i_history')'/(N_i*q))); % first step
-    I_before_D_e=Th_li_full(I_0 + (J_ee*m_e_history')/(N_e*q) - (J_ei*m_i_history')/(N_i*q)); % input to m_e when -D<t<0
-    I_before_D_i=Th_li_full(I_0 + (J_ie*m_e_history')/(N_e*q) - (J_ii*m_i_history')/(N_i*q)); % input to m_i when -D<t<0
+    m_e(:,1)=m_e_history + (dt/tau)*(-m_e_history+proj.common.Th_li_full(I_0 + (J_ee*m_e_history')'/(N_e*q) - (J_ei*m_i_history')'/(N_i*q))); % first step
+    m_i(:,1)=m_i_history + (dt/tau)*(-m_i_history+proj.common.Th_li_full(I_0 + (J_ie*m_e_history')'/(N_e*q) - (J_ii*m_i_history')'/(N_i*q))); % first step
+    I_before_D_e=proj.common.Th_li_full(I_0 + (J_ee*m_e_history')/(N_e*q) - (J_ei*m_i_history')/(N_i*q)); % input to m_e when -D<t<0
+    I_before_D_i=proj.common.Th_li_full(I_0 + (J_ie*m_e_history')/(N_e*q) - (J_ii*m_i_history')/(N_i*q)); % input to m_i when -D<t<0
     
     i=1;
     
@@ -81,8 +81,8 @@ if (size(m_e_history,2)==1) && length(size(m_i_history,2))==1  % checks if the h
             Inpm_i(:,i+1)=I_before_D_i;
         else
             
-            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+Th_li_full(I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ei*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
-            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+Th_li_full(I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ii*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
+            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+proj.common.Th_li_full(I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ei*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
+            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+proj.common.Th_li_full(I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ii*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
             Inpm_e(:,i+1)=I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/(max([N_e-1 1])*q)-J_ei*m_i(:,round((t-D)/dt)+1)/(N_i*q);
             Inpm_i(:,i+1)=I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ii*m_i(:,round((t-D)/dt)+1)/(max([N_i-1 1])*q);
         end
@@ -97,8 +97,8 @@ if (size(m_e_history,2)==1) && length(size(m_i_history,2))==1  % checks if the h
 else   % if m_e_history and m_i_history are not constants
     
     
-    m_e(:,1)=m_e_history(:,end) + (dt/tau)*(-m_e_history(:,end)+Th_li_full(I_0 + J_ee*m_e_history(:,end-round(D/dt))/(N_e*q) - J_ei*m_i_history(:,end-round(D/dt))/(N_i*q)));
-    m_i(:,1)=m_i_history(:,end) + (dt/tau)*(-m_i_history(:,end)+Th_li_full(I_0 + J_ie*m_e_history(:,end-round(D/dt))/(N_e*q) - J_ii*m_i_history(:,end-round(D/dt))/(N_i*q)));
+    m_e(:,1)=m_e_history(:,end) + (dt/tau)*(-m_e_history(:,end)+proj.common.Th_li_full(I_0 + J_ee*m_e_history(:,end-round(D/dt))/(N_e*q) - J_ei*m_i_history(:,end-round(D/dt))/(N_i*q)));
+    m_i(:,1)=m_i_history(:,end) + (dt/tau)*(-m_i_history(:,end)+proj.common.Th_li_full(I_0 + J_ie*m_e_history(:,end-round(D/dt))/(N_e*q) - J_ii*m_i_history(:,end-round(D/dt))/(N_i*q)));
     
     i=1;
     
@@ -107,14 +107,14 @@ else   % if m_e_history and m_i_history are not constants
         
         if t<D
             
-            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+Th_li_full(I_0 + J_ee*m_e_history(:,round(end-round(D/dt))+i)/(N_e*q)-J_ei*m_i_history(:,round(end-round(D/dt))+i)/(N_i*q)));
-            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+Th_li_full(I_0 + J_ie*m_e_history(:,round(end-round(D/dt))+i)/(N_e*q)-J_ii*m_i_history(:,round(end-round(D/dt))+i)/(N_i*q)));
+            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+proj.common.Th_li_full(I_0 + J_ee*m_e_history(:,round(end-round(D/dt))+i)/(N_e*q)-J_ei*m_i_history(:,round(end-round(D/dt))+i)/(N_i*q)));
+            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+proj.common.Th_li_full(I_0 + J_ie*m_e_history(:,round(end-round(D/dt))+i)/(N_e*q)-J_ii*m_i_history(:,round(end-round(D/dt))+i)/(N_i*q)));
             Inpm_e(:,i+1)=I_0 + J_ee*m_e_history(:,round(end-round(D/dt))+i)/(max([N_e-1 1])*q)-J_ei*m_i_history(:,round(end-round(D/dt))+i)/(N_i*q);
             Inpm_i(:,i+1)=I_0 + J_ie*m_e_history(:,round(end-round(D/dt))+i)/N_e-J_ii*m_i_history(:,round(end-round(D/dt))+i)/(max([N_i-1 1])*q);
         else
             
-            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+Th_li_full(I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ei*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
-            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+Th_li_full(I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ii*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
+            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+proj.common.Th_li_full(I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ei*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
+            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+proj.common.Th_li_full(I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ii*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
             Inpm_e(:,i+1)=I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/(max([N_e-1 1])*q)-J_ei*m_i(:,round((t-D)/dt)+1)/(N_i*q);
             Inpm_i(:,i+1)=I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ii*m_i(:,round((t-D)/dt)+1)/(max([N_i-1 1])*q);
         end

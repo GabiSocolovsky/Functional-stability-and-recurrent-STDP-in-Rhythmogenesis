@@ -137,7 +137,7 @@ for i=1:length(t)
         Corr_ei=mfa(1:N_e)*mfa((N_e+1):(N_e+N_i))'; % Cross-correlation ei
         Corr_ie=Corr_ei'; % Cross-correlation ie (same in FP region)
         J_ei_dot=lambda_i*((1-alpha)*Corr_ei); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
-        J_ie_dot=lambda_e*(((Th_li_full(1-Jie/Jiemax)).^mu-alpha).*Corr_ie); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
+        J_ie_dot=lambda_e*(((proj.common.Th_li_full(1-Jie/Jiemax)).^mu-alpha).*Corr_ie); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
     else % The R regime is solved with simulations
         [Corr_ie,Corr_ei,~,~,m_e_T,m_i_T,~,~,~]=proj.common.Correlations_2D_full_diff(Jee,Jei,Jie,Jii,dt,tf);
         stdmebar(i)=std(mean(m_e_T,2));
@@ -147,7 +147,7 @@ for i=1:length(t)
         for n=1:N_e
             for k=1:N_i
                 J_ei_dot(n,k)=lambda_i*((K_pI-alpha*K_mI)*squeeze(Corr_ie(k,n,:))*dt);
-                J_ie_dot(k,n)=lambda_e*(((Th_li_full(1-Jie(k,n)/Jiemax))^mu*K_pE-alpha*K_mE)*squeeze(Corr_ei(n,k,:))*dt);
+                J_ie_dot(k,n)=lambda_e*(((proj.common.Th_li_full(1-Jie(k,n)/Jiemax))^mu*K_pE-alpha*K_mE)*squeeze(Corr_ei(n,k,:))*dt);
             end
         end
     end

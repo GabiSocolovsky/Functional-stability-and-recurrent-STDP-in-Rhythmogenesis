@@ -145,7 +145,7 @@ for i=1:length(t)
         Corr_ei=mfa(1:N_e)*mfa((N_e+1):(N_e+N_i))'; % cross-correlations
         Corr_ie=Corr_ei'; % cross-correlations
         J_ei_dot=lambda_i*((1-alpha)*Corr_ei); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
-        J_ie_dot=lambda_e*(((Th_li_full(1-Jie/Jiemax)).^mu-alpha).*Corr_ie); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
+        J_ie_dot=lambda_e*(((proj.common.Th_li_full(1-Jie/Jiemax)).^mu-alpha).*Corr_ie); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
     elseif Jeimean*Jiemean<JbarD^2 && i>=death_time  % After death of neurons the bif. line has changed and there is sometime in the new FP region
         J=[[Jee/N_e -Jei/(N_i-num_dead)];[Jie/N_e -Jii/(N_i-num_dead)]]; % connectivity matrix
         diagonal=eye(N_e+N_i);
@@ -157,7 +157,7 @@ for i=1:length(t)
         Corr_ei=mfa(1:N_e)*mfa((N_e+1):(N_e+N_i))';
         Corr_ie=Corr_ei';
         J_ei_dot=lambda_i*((1-alpha)*Corr_ei); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
-        J_ie_dot=lambda_e*(((Th_li_full(1-Jie/Jiemax)).^mu-alpha).*Corr_ie); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
+        J_ie_dot=lambda_e*(((proj.common.Th_li_full(1-Jie/Jiemax)).^mu-alpha).*Corr_ie); % NOTICE that I put Corr_ei instead of Corr_ie because there is symmetry Cei,ij=Cie,ji in the FP regime
     else % The R regime is solved with simulations
         [Corr_ie,Corr_ei,~,~,m_e_T,m_i_T,~,~,~]=proj.common.Correlations_2D_full_diff(Jee,Jei,Jie,Jii,dt,tf); % find cross-correlations
         if i<death_time && i>death_time-10 && Jeimean*Jiemean>Jeibef*Jiebef % find the neural dynamics ans synapses before death of neurons
@@ -182,7 +182,7 @@ for i=1:length(t)
         for n=1:N_e % Compute STDP dynamics
             for k=1:N_i
                 J_ei_dot(n,k)=lambda_i*((K_pI-alpha*K_mI)*squeeze(Corr_ie(k,n,:))*dt);
-                J_ie_dot(k,n)=lambda_e*(((Th_li_full(1-Jie(k,n)/Jiemax))^mu*K_pE-alpha*K_mE)*squeeze(Corr_ei(n,k,:))*dt);
+                J_ie_dot(k,n)=lambda_e*(((proj.common.Th_li_full(1-Jie(k,n)/Jiemax))^mu*K_pE-alpha*K_mE)*squeeze(Corr_ei(n,k,:))*dt);
             end
         end
     end

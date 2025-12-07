@@ -195,7 +195,7 @@ for i=2:length(t) % dynamics
     Transtime(i)=time_full(end); % the times between each synaptic update
     
     Jeidot=lambda_i*dt*( [m_i_bef m_i_now]*KI*[m_e_bef m_e_now]' - [m_i_bef 0*m_i_now]*KI*[m_e_bef 0*m_e_now]' )'/tf; % compute the integral in STDP dynamics (see appendix of numerics)
-    Jiedotpot=lambda_e*dt*( (Th_li_full(1-Jie'/Jiemax)).^mu.*([m_e_bef m_e_now]*KpE*[m_i_bef m_i_now]') - (Th_li_full(1-Jie'/Jiemax)).^mu.*([m_e_bef 0*m_e_now]*KpE*[m_i_bef 0*m_i_now]') )'/tf; % compute the integral in STDP dynamics (see appendix of numerics)
+    Jiedotpot=lambda_e*dt*( (proj.common.Th_li_full(1-Jie'/Jiemax)).^mu.*([m_e_bef m_e_now]*KpE*[m_i_bef m_i_now]') - (proj.common.Th_li_full(1-Jie'/Jiemax)).^mu.*([m_e_bef 0*m_e_now]*KpE*[m_i_bef 0*m_i_now]') )'/tf; % compute the integral in STDP dynamics (see appendix of numerics)
     Jiedotdep=lambda_e*dt*( [m_e_bef m_e_now]*KmE*[m_i_bef m_i_now]' - [m_e_bef 0*m_e_now]*KmE*[m_i_bef 0*m_i_now]' )'/tf; % compute the integral in STDP dynamics (see appendix of numerics)
     Jiedot=Jiedotpot-alpha*Jiedotdep; % same 
     
