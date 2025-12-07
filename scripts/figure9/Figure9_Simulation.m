@@ -17,6 +17,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%% Basic Parameters %%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+filename='data\SparseDynamicsp0.3.mat'; % 
 oldparam = sympref("HeavisideAtOrigin",1/2); % 0.5 at the origin for heaviside
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 T=1; % time constant tau (5msec)
@@ -63,7 +64,6 @@ H_I=1;
 
 colo=[0.2, 0.6, 0.2]; % Green
 
-filename='data\SparseDynamicsp0.3error.mat'; % Second run
 p=0.3; % sparsness of connectivity
 Jeimean=0.1; % inital Jei order parameter
 Jiemean=0.3; % initial Jie order parameter
@@ -118,12 +118,11 @@ Jii=Jiimean*ones(N_i,N_i).*Jii_bin; % final matrix of Jii
 Jeiinitlive=sum(Jei_bin(:)); % Number of inital living Jei
 Jieinitlive=sum(Jie_bin(:)); % ... for Jie
 
-tflearn=70000; % total STDP running time
+tflearn=76000; % total STDP running time
 t=1:tflearn; % time for STDP dynamics
 J_ei_dot=zeros(N_e,N_i);
 J_ie_dot=zeros(N_i,N_e);
 dtlearn=1; % timebin for STDP dynamics
-
 
 Jeimeandyn=[]; % mean Jei through time
 Jiemeandyn=[]; % ... Jie
@@ -211,7 +210,7 @@ for i=2:length(t) % dynamics
         
         if ~mod(i,1000)
             
-            save(filename,"Jeimeandyn","Jiemeandyn","Jeidyn","Jiedyn","m_e_full","m_i_full","time_full","Transtime");
+            save(filename,"Jeimeandyn","Jiemeandyn","JbarD","Jiimean","Jiemax");
             i % a flag for last save
         end
         
