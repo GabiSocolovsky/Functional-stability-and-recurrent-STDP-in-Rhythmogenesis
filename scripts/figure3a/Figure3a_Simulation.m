@@ -24,6 +24,7 @@
 % Authors: Gabi Socolovsky & Maoz Shamir
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
 %%%%%%%%%%%% Parameters %%%%%%%%%%%%%%%
 D=0.4; % Delay
 dt=0.01; % Time bin

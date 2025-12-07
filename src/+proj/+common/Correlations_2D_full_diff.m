@@ -35,7 +35,9 @@ function [Corr_ie_final,Corr_ei_final,Corr_ee_final,Corr_ii_final,m_e_T,m_i_T,T_
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+oldparam = sympref("HeavisideAtOrigin",0); % zero at the origin for heaviside
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% History of m_e and m_i , -D<t<0 %%
 m_e_history=0.1;
 m_i_history=0.5;

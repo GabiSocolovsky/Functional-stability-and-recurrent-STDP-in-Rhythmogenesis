@@ -45,6 +45,8 @@ function [NullclineJei,NullclineJie] = NullclinesParallelPt2(JbarD,lambda_i,lamb
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 qei=0; % the cue that dt is smaller (q=0 - no , q=1 - yes) for null of Jei
 qie=0; % the cue that dt is smaller (q=0 - no , q=1 - yes) for null of Jie

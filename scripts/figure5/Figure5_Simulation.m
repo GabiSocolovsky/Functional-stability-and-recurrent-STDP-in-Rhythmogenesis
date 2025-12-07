@@ -12,6 +12,7 @@
 % Authors: Gabi Socolovsky & Maoz Shamir
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
 %%%%%%%%%%%% Parameters %%%%%%%%%%%%%%%%
 %%%%% Phase diagram features (bif. etc.) %%%%%
 T=1; % time constant 5msec tau 

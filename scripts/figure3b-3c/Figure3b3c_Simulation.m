@@ -20,6 +20,8 @@
 % Authors: Gabi Socolovsky & Maoz Shamir
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Compute the order parameters dynamics (figure 3b, except pink trace)%%
 %%%%%%%%%%%%%% Basic Parameters %%%%%%%%%%%%%%%%
 T=1; % time constant tau in 5msec

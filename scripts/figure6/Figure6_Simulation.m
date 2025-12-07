@@ -22,6 +22,8 @@
 % Authors: Gabi Socolovsky & Maoz Shamir
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Runs the STDP dynamics of a network %%
 %%%%%%%%%%%%%%%%% Parameters %%%%%%%%%%%%%%%%
 oldparam = sympref('HeavisideAtOrigin',1/2); % heaviside is 0.5 on zero

@@ -15,6 +15,7 @@
 % Authors: Gabi Socolovsky & Maoz Shamir
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
 %%%%% Network dynamics parameters %%%%%
 dt=0.01; %% time bin
 tf=200; %% final time for network dynamics

@@ -26,7 +26,8 @@ function [mean_period,std_period] = Period_Peaks_full(m,dt)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+oldparam = sympref("HeavisideAtOrigin",0); % zero at the origin for heaviside
 %%%%%%%%% Output variables and others %%%%%%%%%
 std_period=zeros(1,size(m,1)); % the standard deviation across different (empty array)
 mean_period=zeros(1,size(m,1)); % the average time period of m (empty array)

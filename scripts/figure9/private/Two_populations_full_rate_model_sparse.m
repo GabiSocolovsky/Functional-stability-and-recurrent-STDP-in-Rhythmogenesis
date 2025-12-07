@@ -1,5 +1,5 @@
 %% Two populations rate model %%
-function [m_e,m_i,T_mean_m_e,T_mean_m_i,time] = Two_populations_full_rate_model_history(m_e_history,m_i_history,J_ee,J_ei,J_ie,J_ii,dt,tf)
+function [m_e,m_i,T_mean_m_e,T_mean_m_i,time] = Two_populations_full_rate_model_sparse(m_e_history,m_i_history,J_ee,J_ei,J_ie,J_ii,dt,tf,p)
 % This function is the simulation of the neural dynamics in the paper:
 % "Functional stability and recurrent STDP in Rhythmogenesis"
 
@@ -36,8 +36,7 @@ function [m_e,m_i,T_mean_m_e,T_mean_m_i,time] = Two_populations_full_rate_model_
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
-oldparam = sympref("HeavisideAtOrigin",0); % zero at the origin for heaviside
+
 %%%%%%% Network parameters %%%%%%%
 I_0=1; % Constant external input
 tau=1; % Time scale for the firing rate dynamics - 5ms
@@ -53,6 +52,7 @@ N_i=size(J_ei,2); % Size of inhibitory population
 m_e=zeros(N_e,length(time)); % Empty array of excitatory firing rates dynamics
 m_i=zeros(N_i,length(time)); % Empty array of Inhibitory firing rates dynamics
 
+q=1-p; % density
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%% Network Dynamics %%%%%%%%%%%%%%%%%%
 if (size(m_e_history,2)==1) && length(size(m_i_history,2))==1  % checks if the history function is a constant value in time
@@ -64,10 +64,10 @@ if (size(m_e_history,2)==1) && length(size(m_i_history,2))==1  % checks if the h
         m_e_history=m_e_history';
         m_i_history=m_i_history';
     end
-    m_e(:,1)=m_e_history + (dt/tau)*(-m_e_history+Th_li_full(I_0 + (J_ee*m_e_history')'/N_e - (J_ei*m_i_history')'/N_i)); % first step
-    m_i(:,1)=m_i_history + (dt/tau)*(-m_i_history+Th_li_full(I_0 + (J_ie*m_e_history')'/N_e - (J_ii*m_i_history')'/N_i)); % first step
-    I_before_D_e=Th_li_full(I_0 + (J_ee*m_e_history')/N_e - (J_ei*m_i_history')/N_i); % input to m_e when -D<t<0
-    I_before_D_i=Th_li_full(I_0 + (J_ie*m_e_history')/N_e - (J_ii*m_i_history')/N_i); % input to m_i when -D<t<0
+    m_e(:,1)=m_e_history + (dt/tau)*(-m_e_history+Th_li_full(I_0 + (J_ee*m_e_history')'/(N_e*q) - (J_ei*m_i_history')'/(N_i*q))); % first step
+    m_i(:,1)=m_i_history + (dt/tau)*(-m_i_history+Th_li_full(I_0 + (J_ie*m_e_history')'/(N_e*q) - (J_ii*m_i_history')'/(N_i*q))); % first step
+    I_before_D_e=Th_li_full(I_0 + (J_ee*m_e_history')/(N_e*q) - (J_ei*m_i_history')/(N_i*q)); % input to m_e when -D<t<0
+    I_before_D_i=Th_li_full(I_0 + (J_ie*m_e_history')/(N_e*q) - (J_ii*m_i_history')/(N_i*q)); % input to m_i when -D<t<0
     
     i=1;
     
@@ -81,10 +81,10 @@ if (size(m_e_history,2)==1) && length(size(m_i_history,2))==1  % checks if the h
             Inpm_i(:,i+1)=I_before_D_i;
         else
             
-            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+Th_li_full(I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/N_e-J_ei*m_i(:,round((t-D)/dt)+1)/N_i));
-            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+Th_li_full(I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/N_e-J_ii*m_i(:,round((t-D)/dt)+1)/N_i));
-            Inpm_e(:,i+1)=I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/max([N_e-1 1])-J_ei*m_i(:,round((t-D)/dt)+1)/N_i;
-            Inpm_i(:,i+1)=I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/N_e-J_ii*m_i(:,round((t-D)/dt)+1)/max([N_i-1 1]);
+            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+Th_li_full(I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ei*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
+            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+Th_li_full(I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ii*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
+            Inpm_e(:,i+1)=I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/(max([N_e-1 1])*q)-J_ei*m_i(:,round((t-D)/dt)+1)/(N_i*q);
+            Inpm_i(:,i+1)=I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ii*m_i(:,round((t-D)/dt)+1)/(max([N_i-1 1])*q);
         end
         
         i=i+1;
@@ -97,8 +97,8 @@ if (size(m_e_history,2)==1) && length(size(m_i_history,2))==1  % checks if the h
 else   % if m_e_history and m_i_history are not constants
     
     
-    m_e(:,1)=m_e_history(:,end) + (dt/tau)*(-m_e_history(:,end)+Th_li_full(I_0 + J_ee*m_e_history(:,end-round(D/dt))/N_e - J_ei*m_i_history(:,end-round(D/dt))/N_i));
-    m_i(:,1)=m_i_history(:,end) + (dt/tau)*(-m_i_history(:,end)+Th_li_full(I_0 + J_ie*m_e_history(:,end-round(D/dt))/N_e - J_ii*m_i_history(:,end-round(D/dt))/N_i));
+    m_e(:,1)=m_e_history(:,end) + (dt/tau)*(-m_e_history(:,end)+Th_li_full(I_0 + J_ee*m_e_history(:,end-round(D/dt))/(N_e*q) - J_ei*m_i_history(:,end-round(D/dt))/(N_i*q)));
+    m_i(:,1)=m_i_history(:,end) + (dt/tau)*(-m_i_history(:,end)+Th_li_full(I_0 + J_ie*m_e_history(:,end-round(D/dt))/(N_e*q) - J_ii*m_i_history(:,end-round(D/dt))/(N_i*q)));
     
     i=1;
     
@@ -107,16 +107,16 @@ else   % if m_e_history and m_i_history are not constants
         
         if t<D
             
-            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+Th_li_full(I_0 + J_ee*m_e_history(:,round(end-round(D/dt))+i)/N_e-J_ei*m_i_history(:,round(end-round(D/dt))+i)/N_i));
-            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+Th_li_full(I_0 + J_ie*m_e_history(:,round(end-round(D/dt))+i)/N_e-J_ii*m_i_history(:,round(end-round(D/dt))+i)/N_i));
-            Inpm_e(:,i+1)=I_0 + J_ee*m_e_history(:,round(end-round(D/dt))+i)/max([N_e-1 1])-J_ei*m_i_history(:,round(end-round(D/dt))+i)/N_i;
-            Inpm_i(:,i+1)=I_0 + J_ie*m_e_history(:,round(end-round(D/dt))+i)/N_e-J_ii*m_i_history(:,round(end-round(D/dt))+i)/max([N_i-1 1]);
+            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+Th_li_full(I_0 + J_ee*m_e_history(:,round(end-round(D/dt))+i)/(N_e*q)-J_ei*m_i_history(:,round(end-round(D/dt))+i)/(N_i*q)));
+            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+Th_li_full(I_0 + J_ie*m_e_history(:,round(end-round(D/dt))+i)/(N_e*q)-J_ii*m_i_history(:,round(end-round(D/dt))+i)/(N_i*q)));
+            Inpm_e(:,i+1)=I_0 + J_ee*m_e_history(:,round(end-round(D/dt))+i)/(max([N_e-1 1])*q)-J_ei*m_i_history(:,round(end-round(D/dt))+i)/(N_i*q);
+            Inpm_i(:,i+1)=I_0 + J_ie*m_e_history(:,round(end-round(D/dt))+i)/N_e-J_ii*m_i_history(:,round(end-round(D/dt))+i)/(max([N_i-1 1])*q);
         else
             
-            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+Th_li_full(I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/N_e-J_ei*m_i(:,round((t-D)/dt)+1)/N_i));
-            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+Th_li_full(I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/N_e-J_ii*m_i(:,round((t-D)/dt)+1)/N_i));
-            Inpm_e(:,i+1)=I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/max([N_e-1 1])-J_ei*m_i(:,round((t-D)/dt)+1)/N_i;
-            Inpm_i(:,i+1)=I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/N_e-J_ii*m_i(:,round((t-D)/dt)+1)/max([N_i-1 1]);
+            m_e(:,i+1)= m_e(:,i) + (dt/tau)*(-m_e(:,i)+Th_li_full(I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ei*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
+            m_i(:,i+1)= m_i(:,i) + (dt/tau)*(-m_i(:,i)+Th_li_full(I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ii*m_i(:,round((t-D)/dt)+1)/(N_i*q)));
+            Inpm_e(:,i+1)=I_0 + J_ee*m_e(:,round((t-D)/dt)+1)/(max([N_e-1 1])*q)-J_ei*m_i(:,round((t-D)/dt)+1)/(N_i*q);
+            Inpm_i(:,i+1)=I_0 + J_ie*m_e(:,round((t-D)/dt)+1)/(N_e*q)-J_ii*m_i(:,round((t-D)/dt)+1)/(max([N_i-1 1])*q);
         end
         i=i+1;
         

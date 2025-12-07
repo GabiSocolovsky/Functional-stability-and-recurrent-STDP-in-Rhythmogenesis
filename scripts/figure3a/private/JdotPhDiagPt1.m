@@ -45,6 +45,7 @@ function [Jeidot,Jiedot,Jei_arr,Jie_arr] = JdotPhDiagPt1(JbarD,lambda_i,lambda_e
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
 %% Define the grid and create temporal kernels %%
 Jei_init=0.05;
 dJei=0.1;

@@ -26,6 +26,8 @@
 % Authors: Gabi Socolovsky & Maoz Shamir
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Running on abscence (p=0) and presence (p=1) %%%%%
 for p=0:1 % p=0 for J_{XX}=0 otherwise JEE=0.6 and JII=0.4
     if ~p % not intra

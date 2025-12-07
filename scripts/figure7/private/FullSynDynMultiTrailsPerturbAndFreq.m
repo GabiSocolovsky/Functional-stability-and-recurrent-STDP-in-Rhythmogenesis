@@ -79,6 +79,8 @@ function [stdmebar,stdmibar,stdmetil,stdmitil,Jeimeandyn,Jiemeandyn,frequency,m_
 % Date: 2025-09-29
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Defining variables %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Definitions found in introduction %
 stdmebar=nan(1,length(t));
 stdmibar=nan(1,length(t));
