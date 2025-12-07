@@ -63,7 +63,7 @@ H_I=1;
 
 colo=[0.2, 0.6, 0.2]; % Green
 
-filename='data\SparseDynamicsp0.3error.mat'; % Second run
+filename='data\SparseDynamicsp0.3.mat'; % Second run
 p=0.3; % sparsness of connectivity
 Jeimean=0.1; % inital Jei order parameter
 Jiemean=0.3; % initial Jie order parameter
